@@ -33,69 +33,12 @@
         <span id="languageLabel">AR</span>
       </button>
 
-      <button class="menu-btn" id="menuBtn" type="button" aria-label="Open meal diary">
-        <span></span><span></span><span></span>
-      </button>
     </div>
   </div>
 </header>
 
 
 
-<div id="drawerBackdrop" class="drawer-backdrop" hidden></div>
-<aside id="mealDrawer" class="meal-drawer" aria-hidden="true">
-  <div class="drawer-head">
-    <div>
-      <small id="drawerEyebrow">Personal diary</small>
-      <h2 id="drawerTitle">Meal calendar</h2>
-    </div>
-    <button id="closeDrawerBtn" class="drawer-close" type="button" aria-label="Close">×</button>
-  </div>
-
-  <div class="drawer-body">
-    <div class="calendar-picker">
-      <div class="field">
-        <label id="mealDateLabel">Date</label>
-        <input id="mealDiaryDate" type="date">
-      </div>
-      <div class="field">
-        <label id="mealTypeLabel">Meal type</label>
-        <select id="mealDiaryType">
-          <option value="Breakfast">Breakfast</option>
-          <option value="Lunch">Lunch</option>
-          <option value="Dinner">Dinner</option>
-          <option value="Snack">Snack</option>
-        </select>
-      </div>
-    </div>
-
-    <div class="field">
-      <label id="mealNameLabel">Meal</label>
-      <input id="mealDiaryName" placeholder="e.g. grilled chicken and rice">
-    </div>
-
-    <div class="grid2">
-      <div class="field">
-        <label id="mealCaloriesLabel">Calories</label>
-        <input id="mealDiaryCalories" type="number" min="0" placeholder="0">
-      </div>
-      <div class="field">
-        <label id="mealProteinLabel">Protein (g)</label>
-        <input id="mealDiaryProtein" type="number" min="0" placeholder="0">
-      </div>
-    </div>
-
-    <button id="saveMealDiaryBtn" class="btn primary drawer-save" type="button">Save meal</button>
-
-    <div class="diary-filter">
-      <button id="prevDiaryDay" type="button" aria-label="Previous day">‹</button>
-      <strong id="selectedDiaryDate"></strong>
-      <button id="nextDiaryDay" type="button" aria-label="Next day">›</button>
-    </div>
-
-    <div id="mealDiaryList" class="meal-diary-list"></div>
-  </div>
-</aside>
 
 <main>
 <section id="page-home" class="app-page active">
@@ -354,10 +297,6 @@
         <svg viewBox="0 0 24 24"><path d="M4 7h16v13H4Z"/><path d="M7 7V4h10v3M8 11h8"/></svg>
         <span data-tool-i18n="pantry">Pantry</span>
       </button>
-      <button class="tool-tab" data-tool-panel="scanner" type="button">
-        <svg viewBox="0 0 24 24"><path d="M4 7V4h3M17 4h3v3M20 17v3h-3M7 20H4v-3"/><path d="M7 9v6M10 9v6M14 9v6M17 9v6"/></svg>
-        <span data-tool-i18n="scanner">Scanner</span>
-      </button>
       <button class="tool-tab" data-tool-panel="coach" type="button">
         <svg viewBox="0 0 24 24"><path d="M12 3v18M3 12h18"/><circle cx="12" cy="12" r="9"/></svg>
         <span data-tool-i18n="coach">Coach</span>
@@ -467,34 +406,6 @@
           <div id="pantryAiResult" class="tool-result" hidden></div>
         </article>
       </div>
-    </section>
-
-    <section class="tool-panel" data-tool-panel-content="scanner">
-      <div class="tools-grid two">
-        <article class="card tool-card">
-          <div class="tool-card-head">
-            <div><small data-tool-i18n="barcode">Barcode</small><h3 data-tool-i18n="productScanner">Product scanner</h3></div>
-          </div>
-          <p data-tool-i18n="scannerText">Enter a barcode or scan it from a product photo when your browser supports barcode detection.</p>
-          <div class="inline-form">
-            <input id="barcodeInput" inputmode="numeric" placeholder="3017620422003">
-            <button class="btn primary" id="lookupBarcodeBtn" type="button" data-tool-i18n="lookup">Look up</button>
-          </div>
-          <label class="upload-action compact-upload">
-            <input id="barcodeImageInput" type="file" accept="image/*" capture="environment">
-            <svg viewBox="0 0 24 24"><path d="M4 7h4l2-3h4l2 3h4v13H4Z"/><circle cx="12" cy="13" r="4"/></svg>
-            <span data-tool-i18n="scanPhoto">Scan product photo</span>
-          </label>
-          <div id="barcodeStatus" class="status-line"></div>
-        </article>
-
-        <article class="card tool-card">
-          <div class="tool-card-head">
-            <div><small data-tool-i18n="nutritionFacts">Nutrition facts</small><h3 data-tool-i18n="productResult">Product result</h3></div>
-          </div>
-          <div id="productResult" class="product-result empty-tool-result" data-tool-i18n="noProduct">No product selected yet.</div>
-        </article>
-      </div>
 
       <article class="card tool-card comparison-card">
         <div class="tool-card-head">
@@ -573,7 +484,7 @@
     </section>
 
     <section class="tool-panel" data-tool-panel-content="reports">
-      <div class="tools-grid two">
+      <div class="tools-grid">
         <article class="card tool-card">
           <div class="tool-card-head">
             <div><small data-tool-i18n="weeklyReview">Weekly review</small><h3 data-tool-i18n="smartReport">Smart progress report</h3></div>
@@ -583,18 +494,7 @@
           <div id="weeklyReportResult" class="tool-result" hidden></div>
         </article>
 
-        <article class="card tool-card">
-          <div class="tool-card-head">
-            <div><small data-tool-i18n="exportShare">Export & share</small><h3 data-tool-i18n="yourData">Your local data</h3></div>
-          </div>
-          <div class="export-actions">
-            <button class="btn soft" id="printPlanBtn" type="button" data-tool-i18n="printPlan">Print plan</button>
-            <button class="btn soft" id="shareSummaryBtn" type="button" data-tool-i18n="shareSummary">Share summary</button>
-            <button class="btn soft" id="exportDataBtn" type="button" data-tool-i18n="exportBackup">Export backup</button>
-            <label class="btn soft file-btn"><input id="importDataInput" type="file" accept="application/json"><span data-tool-i18n="importBackup">Import backup</span></label>
-          </div>
-          <p class="privacy-note" data-tool-i18n="localPrivacy">Your health data remains in this browser unless you export it.</p>
-        </article>
+
       </div>
     </section>
   </div>

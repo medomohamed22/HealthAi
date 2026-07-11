@@ -5,9 +5,6 @@
     },
     "api/images.js": {
       "maxDuration": 20
-    },
-    "api/product.js": {
-      "maxDuration": 15
     }
   },
   "headers": [
