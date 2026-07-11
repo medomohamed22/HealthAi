@@ -30,7 +30,6 @@ healthai-vercel/
 | الاسم | مطلوب | الاستخدام |
 |---|---:|---|
 | `GEMINI_API_KEY` | نعم | إنشاء الخطط والمحادثة وتحليل صور الوجبات |
-| `GEMINI_MODEL` | لا | مثال: `gemini-2.5-flash` |
 | `UNSPLASH_ACCESS_KEY` | لا | البحث عن صور وجبات مناسبة |
 | `ALLOWED_ORIGIN` | لا | تقييد API على دومين الموقع، مثل `https://your-site.vercel.app` |
 

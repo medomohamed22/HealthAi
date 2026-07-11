@@ -47,19 +47,33 @@ Your information:${JSON.stringify(u)}
 {"title":"","summary":"","medicalWarning":"","days":[{"day":"","totalCalories":0,"meals":[{"name":"","ingredients":"","calories":0,"protein":0,"carbs":0,"fats":0,"alternative":"","prepTime":"","difficulty":"","instructions":[""],"imageKeyword":""}]}],"tips":[""],"shoppingList":[{"category":"","item":"","quantity":""}]}`}
 
 async function apiRequest(url, options={}){
-  const response=await fetch(url,{
-    ...options,
-    headers:{
-      "Content-Type":"application/json",
-      ...(options.headers||{})
-    }
-  });
+  const controller=new AbortController();
+  const timeoutMs=url.includes("/api/gemini")?50000:15000;
+  const timer=setTimeout(()=>controller.abort(),timeoutMs);
 
-  const data=await response.json().catch(()=>({}));
-  if(!response.ok){
-    throw new Error(data?.error||data?.message||`Request failed (${response.status})`);
+  try{
+    const response=await fetch(url,{
+      ...options,
+      signal:controller.signal,
+      headers:{
+        "Content-Type":"application/json",
+        ...(options.headers||{})
+      }
+    });
+
+    const data=await response.json().catch(()=>({}));
+    if(!response.ok){
+      throw new Error(data?.error||data?.message||`Request failed (${response.status})`);
+    }
+    return data;
+  }catch(error){
+    if(error?.name==="AbortError"){
+      throw new Error("استغرق الطلب وقتًا طويلًا. حاول مرة أخرى بصورة أصغر أو بيانات أقل.");
+    }
+    throw error;
+  }finally{
+    clearTimeout(timer);
   }
-  return data;
 }
 
 async function geminiText(prompt,json=true){
