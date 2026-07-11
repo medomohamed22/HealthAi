@@ -1,0 +1,17 @@
+{
+  "name": "HealthAi Smart Nutrition",
+  "short_name": "HealthAi",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f4f8f6",
+  "theme_color": "#0b6b4b",
+  "description": "Smart nutrition planning and local health tracking",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

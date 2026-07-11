@@ -1064,6 +1064,486 @@ document.addEventListener("click",event=>{
   }
 });
 
+
+// ---------- Smart Tools ----------
+const TOOL_STORE={
+  daily:"healthai_daily_log_v1",
+  pantry:"healthai_pantry_v1",
+  reminders:"healthai_reminders_v1",
+  ramadan:"healthai_ramadan_v1",
+  points:"healthai_points_v1",
+  streak:"healthai_streak_v1"
+};
+
+const TOOL_I18N={
+  en:{
+    toolsTitle:"Smart Tools",localBadge:"Saved locally",commandCenter:"Health command center",
+    toolsHeroTitle:"Everything you need for a healthier day",
+    toolsHeroText:"Track meals, use your pantry, scan products, create reminders and review your weekly progress.",
+    points:"Points",dailyTracker:"Daily Tracker",pantry:"Pantry",scanner:"Scanner",coach:"Coach",reports:"Reports",
+    caloriesToday:"Calories today",proteinToday:"Protein today",waterToday:"Water today",
+    quickLog:"Quick log",addMeal:"Add a meal",mealName:"Meal name",calories:"Calories",protein:"Protein",
+    mealType:"Meal type",addToToday:"Add to today",todayLog:"Today log",mealsAndMacros:"Meals & macros",
+    clear:"Clear",challenge:"Daily challenge",challengeTitle:"Complete your healthy basics",
+    ingredientsHome:"Ingredients at home",pantryTitle:"Smart pantry",add:"Add",cookFromPantry:"Cook from my pantry",
+    pantryAiText:"Generate practical meal ideas using only the ingredients you already have.",
+    servings:"Servings",maxTime:"Max time",generateIdeas:"Generate meal ideas",
+    barcode:"Barcode",productScanner:"Product scanner",
+    scannerText:"Enter a barcode or scan it from a product photo when your browser supports barcode detection.",
+    lookup:"Look up",scanPhoto:"Scan product photo",nutritionFacts:"Nutrition facts",productResult:"Product result",
+    noProduct:"No product selected yet.",comparison:"Comparison",compareMeals:"Compare two meals or products",
+    compareNow:"Compare now",lifestyle:"Lifestyle",quickProfile:"Quick profile presets",student:"Student",
+    office:"Office worker",athlete:"Athlete",busy:"Busy schedule",budgetProfile:"Budget meals",noCook:"No cooking",
+    seasonalMode:"Seasonal mode",ramadanMode:"Ramadan planner",iftarTime:"Iftar time",suhoorTime:"Suhoor ends",
+    ramadanGoal:"Ramadan goal",generateRamadan:"Create Ramadan guidance",reminders:"Reminders",
+    healthyReminders:"Healthy reminders",enable:"Enable",reminderType:"Type",time:"Time",
+    addReminder:"Add reminder",installApp:"Install HealthAi",
+    installText:"Install the website like an app for a cleaner full-screen experience and offline shell.",
+    install:"Install app",weeklyReview:"Weekly review",smartReport:"Smart progress report",
+    generateReport:"Generate report",exportShare:"Export & share",yourData:"Your local data",
+    printPlan:"Print plan",shareSummary:"Share summary",exportBackup:"Export backup",importBackup:"Import backup",
+    localPrivacy:"Your health data remains in this browser unless you export it.",
+    smartTools:"Smart Tools",smartToolsText:"Tracker, pantry, scanner and reports",
+    mealPlaceholder:"e.g. chicken and rice",pantryPlaceholder:"e.g. eggs, oats, yogurt",
+    compareAPlaceholder:"First meal or product",compareBPlaceholder:"Second meal or product",
+    emptyMeals:"No meals logged today.",emptyPantry:"Your pantry is empty.",itemRequired:"Enter an item first.",
+    mealRequired:"Enter a meal name.",savedMeal:"Meal added to today.",deleted:"Deleted.",
+    breakfast:"Breakfast",lunch:"Lunch",dinner:"Dinner",snack:"Snack",
+    waterChallenge:"Drink 8 cups",mealChallenge:"Log a meal",planChallenge:"Have a plan",progressChallenge:"Record progress",
+    dayStreak:"day streak",noBarcode:"No barcode detected. Enter it manually.",scanning:"Scanning image...",
+    productNotFound:"Product was not found.",unsupportedScanner:"Barcode photo scanning is not supported in this browser.",
+    listening:"Listening… say the meal and calories.",voiceUnsupported:"Voice input is not supported in this browser.",
+    presetApplied:"Profile applied. Review your information in the Plan page.",ideasLoading:"Creating ideas...",
+    compareLoading:"Comparing...",reportLoading:"Preparing your report...",ramadanLoading:"Preparing Ramadan guidance...",
+    notificationGranted:"Notifications enabled.",notificationDenied:"Notification permission was not granted.",
+    reminderAdded:"Reminder saved. It works while the app is open.",noReminders:"No reminders yet.",
+    installed:"The app is already installed or installation is unavailable.",imported:"Backup imported successfully.",
+    invalidBackup:"This backup file is invalid.",shared:"Summary ready to share.",
+    metricMeals:"Meals logged",metricCalories:"Average calories",metricWeight:"Weight entries",metricWater:"Water today",
+    noWeeklyData:"Add meals and progress entries to build a richer weekly report.",
+    delete:"Delete",kcal:"kcal",grams:"g",unknown:"Unknown",healthScore:"Health score",
+    addProductToLog:"Add product to today",productAdded:"Product added to today's log."
+  },
+  ar:{
+    toolsTitle:"الأدوات الذكية",localBadge:"محفوظ محليًا",commandCenter:"مركز التحكم الصحي",
+    toolsHeroTitle:"كل ما تحتاجه ليوم صحي في مكان واحد",
+    toolsHeroText:"سجّل وجباتك، استخدم مكونات المنزل، امسح المنتجات، أنشئ تذكيرات وراجع تقدمك الأسبوعي.",
+    points:"النقاط",dailyTracker:"المتابعة اليومية",pantry:"المخزن",scanner:"الباركود",coach:"المدرب",reports:"التقارير",
+    caloriesToday:"سعرات اليوم",proteinToday:"بروتين اليوم",waterToday:"مياه اليوم",
+    quickLog:"إضافة سريعة",addMeal:"إضافة وجبة",mealName:"اسم الوجبة",calories:"السعرات",protein:"البروتين",
+    mealType:"نوع الوجبة",addToToday:"إضافة لليوم",todayLog:"سجل اليوم",mealsAndMacros:"الوجبات والعناصر",
+    clear:"مسح",challenge:"تحدي اليوم",challengeTitle:"أكمل أساسيات يومك الصحي",
+    ingredientsHome:"المكونات الموجودة",pantryTitle:"مخزن المكونات الذكي",add:"إضافة",cookFromPantry:"اطبخ من الموجود",
+    pantryAiText:"أنشئ أفكار وجبات عملية باستخدام المكونات الموجودة لديك فقط.",
+    servings:"عدد الأشخاص",maxTime:"أقصى وقت",generateIdeas:"إنشاء أفكار وجبات",
+    barcode:"الباركود",productScanner:"ماسح المنتجات",
+    scannerText:"اكتب الباركود أو امسحه من صورة المنتج إذا كان المتصفح يدعم اكتشاف الباركود.",
+    lookup:"بحث",scanPhoto:"مسح صورة المنتج",nutritionFacts:"القيم الغذائية",productResult:"نتيجة المنتج",
+    noProduct:"لم يتم اختيار منتج بعد.",comparison:"المقارنة",compareMeals:"قارن وجبتين أو منتجين",
+    compareNow:"قارن الآن",lifestyle:"نمط الحياة",quickProfile:"قوالب سريعة للملف",student:"طالب",
+    office:"موظف مكتب",athlete:"رياضي",busy:"جدول مشغول",budgetProfile:"وجبات اقتصادية",noCook:"بدون طبخ",
+    seasonalMode:"وضع موسمي",ramadanMode:"مخطط رمضان",iftarTime:"وقت الإفطار",suhoorTime:"نهاية السحور",
+    ramadanGoal:"هدف رمضان",generateRamadan:"إنشاء إرشادات رمضان",reminders:"التذكيرات",
+    healthyReminders:"تذكيرات صحية",enable:"تفعيل",reminderType:"النوع",time:"الوقت",
+    addReminder:"إضافة تذكير",installApp:"تثبيت HealthAi",
+    installText:"ثبّت الموقع كتطبيق للحصول على تجربة شاشة كاملة وواجهة تعمل دون اتصال جزئيًا.",
+    install:"تثبيت التطبيق",weeklyReview:"مراجعة أسبوعية",smartReport:"تقرير تقدم ذكي",
+    generateReport:"إنشاء التقرير",exportShare:"تصدير ومشاركة",yourData:"بياناتك المحلية",
+    printPlan:"طباعة الخطة",shareSummary:"مشاركة الملخص",exportBackup:"تصدير نسخة",importBackup:"استيراد نسخة",
+    localPrivacy:"تظل بياناتك الصحية داخل هذا المتصفح ما لم تقم بتصديرها.",
+    smartTools:"الأدوات الذكية",smartToolsText:"المتابعة والمخزن والباركود والتقارير",
+    mealPlaceholder:"مثال: فراخ وأرز",pantryPlaceholder:"مثال: بيض، شوفان، زبادي",
+    compareAPlaceholder:"الوجبة أو المنتج الأول",compareBPlaceholder:"الوجبة أو المنتج الثاني",
+    emptyMeals:"لم تسجل وجبات اليوم.",emptyPantry:"مخزن المكونات فارغ.",itemRequired:"اكتب مكونًا أولًا.",
+    mealRequired:"اكتب اسم الوجبة.",savedMeal:"تمت إضافة الوجبة لليوم.",deleted:"تم الحذف.",
+    breakfast:"الإفطار",lunch:"الغداء",dinner:"العشاء",snack:"وجبة خفيفة",
+    waterChallenge:"اشرب 8 أكواب",mealChallenge:"سجل وجبة",planChallenge:"أنشئ خطة",progressChallenge:"سجل قياسًا",
+    dayStreak:"يوم متواصل",noBarcode:"لم يتم اكتشاف باركود. اكتبه يدويًا.",scanning:"جارٍ مسح الصورة...",
+    productNotFound:"لم يتم العثور على المنتج.",unsupportedScanner:"مسح الباركود من الصور غير مدعوم في هذا المتصفح.",
+    listening:"أستمع الآن… قل اسم الوجبة والسعرات.",voiceUnsupported:"الإدخال الصوتي غير مدعوم في هذا المتصفح.",
+    presetApplied:"تم تطبيق القالب. راجع بياناتك داخل صفحة الخطة.",ideasLoading:"جارٍ إنشاء الأفكار...",
+    compareLoading:"جارٍ إجراء المقارنة...",reportLoading:"جارٍ إعداد التقرير...",ramadanLoading:"جارٍ إعداد إرشادات رمضان...",
+    notificationGranted:"تم تفعيل الإشعارات.",notificationDenied:"لم يتم منح إذن الإشعارات.",
+    reminderAdded:"تم حفظ التذكير. يعمل أثناء فتح التطبيق.",noReminders:"لا توجد تذكيرات.",
+    installed:"التطبيق مثبت بالفعل أو التثبيت غير متاح.",imported:"تم استيراد النسخة بنجاح.",
+    invalidBackup:"ملف النسخة غير صالح.",shared:"الملخص جاهز للمشاركة.",
+    metricMeals:"الوجبات المسجلة",metricCalories:"متوسط السعرات",metricWeight:"قياسات الوزن",metricWater:"مياه اليوم",
+    noWeeklyData:"أضف وجبات وقياسات للحصول على تقرير أسبوعي أغنى.",
+    delete:"حذف",kcal:"سعرة",grams:"جم",unknown:"غير معروف",healthScore:"التقييم الصحي",
+    addProductToLog:"إضافة المنتج لليوم",productAdded:"تمت إضافة المنتج لسجل اليوم."
+  }
+};
+
+function toolT(key){return TOOL_I18N[currentLanguage]?.[key]||TOOL_I18N.en[key]||key}
+function readLocal(key,fallback=[]){try{return JSON.parse(localStorage.getItem(key))??fallback}catch{return fallback}}
+function writeLocal(key,value){localStorage.setItem(key,JSON.stringify(value))}
+function todayKey(){return new Date().toISOString().slice(0,10)}
+
+function applyToolsLanguage(){
+  document.querySelectorAll("[data-tool-i18n]").forEach(el=>{
+    const value=toolT(el.dataset.toolI18n);
+    if(value)el.textContent=value;
+  });
+  document.querySelectorAll("[data-tool-placeholder]").forEach(el=>{
+    el.placeholder=toolT(el.dataset.toolPlaceholder);
+  });
+  const typeLabels={Breakfast:toolT("breakfast"),Lunch:toolT("lunch"),Dinner:toolT("dinner"),Snack:toolT("snack")};
+  ["quickMealType"].forEach(id=>{
+    const select=document.getElementById(id);
+    if(select)[...select.options].forEach(opt=>{if(typeLabels[opt.value])opt.textContent=typeLabels[opt.value]});
+  });
+  const reminderLabels=currentLanguage==="ar"
+    ?{water:"مياه",meal:"وجبة",weight:"قياس الوزن",prep:"تحضير الوجبات"}
+    :{water:"Water",meal:"Meal",weight:"Weight",prep:"Meal prep"};
+  const reminderSelect=$("#reminderType");
+  if(reminderSelect)[...reminderSelect.options].forEach(opt=>opt.textContent=reminderLabels[opt.value]||opt.textContent);
+  const ramadanLabels=currentLanguage==="ar"
+    ?{maintain:"تثبيت الوزن",loss:"خسارة الدهون",performance:"أداء التمرين"}
+    :{maintain:"Maintain",loss:"Fat loss",performance:"Training performance"};
+  const ramadanSelect=$("#ramadanGoal");
+  if(ramadanSelect)[...ramadanSelect.options].forEach(opt=>opt.textContent=ramadanLabels[opt.value]||opt.textContent);
+  if($("#navTools"))$("#navTools").textContent=currentLanguage==="ar"?"الأدوات":"Tools";
+  renderDailyTools();renderPantry();renderReminders();renderWeeklyMetrics();renderPoints();
+}
+
+const originalApplyLanguage=applyLanguage;
+applyLanguage=function(lang){
+  originalApplyLanguage(lang);
+  applyToolsLanguage();
+};
+
+function toolPanelOpen(name){
+  document.querySelectorAll(".tool-tab").forEach(btn=>btn.classList.toggle("active",btn.dataset.toolPanel===name));
+  document.querySelectorAll(".tool-panel").forEach(panel=>panel.classList.toggle("active",panel.dataset.toolPanelContent===name));
+  localStorage.setItem("healthai_tool_panel",name);
+}
+document.querySelectorAll(".tool-tab").forEach(btn=>btn.addEventListener("click",()=>toolPanelOpen(btn.dataset.toolPanel)));
+
+function dailyLog(){
+  const all=readLocal(TOOL_STORE.daily,{});
+  return all[todayKey()]||[];
+}
+function saveDailyLog(rows){
+  const all=readLocal(TOOL_STORE.daily,{});
+  all[todayKey()]=rows;
+  writeLocal(TOOL_STORE.daily,all);
+}
+function getNutritionTargets(){
+  const u=collectData();
+  const calc=calculateNutrition(u);
+  return {calories:+calc.calories||2000,protein:+calc.protein||100};
+}
+function addPoints(amount,reason){
+  const data=readLocal(TOOL_STORE.points,{total:0,history:[]});
+  data.total=(+data.total||0)+amount;
+  data.history.push({date:Date.now(),amount,reason});
+  data.history=data.history.slice(-100);
+  writeLocal(TOOL_STORE.points,data);
+  updateStreak();
+  renderPoints();
+}
+function updateStreak(){
+  const data=readLocal(TOOL_STORE.streak,{last:null,count:0});
+  const today=todayKey();
+  if(data.last===today)return;
+  const yesterday=new Date();yesterday.setDate(yesterday.getDate()-1);
+  const y=yesterday.toISOString().slice(0,10);
+  data.count=data.last===y?(+data.count||0)+1:1;
+  data.last=today;
+  writeLocal(TOOL_STORE.streak,data);
+}
+function renderPoints(){
+  const points=readLocal(TOOL_STORE.points,{total:0}).total||0;
+  const streak=readLocal(TOOL_STORE.streak,{count:0}).count||0;
+  if($("#healthPoints"))$("#healthPoints").textContent=points;
+  if($("#healthStreak"))$("#healthStreak").textContent=`${streak} ${toolT("dayStreak")}`;
+}
+function renderDailyTools(){
+  const rows=dailyLog();
+  const calories=rows.reduce((sum,row)=>sum+(+row.calories||0),0);
+  const protein=rows.reduce((sum,row)=>sum+(+row.protein||0),0);
+  const target=getNutritionTargets();
+  const water=getWater();
+
+  [["dailyCaloriesValue",calories],["dailyCaloriesTarget",target.calories],["dailyProteinValue",protein],["dailyProteinTarget",target.protein],["dailyWaterValue",water]].forEach(([id,val])=>{if($("#"+id))$("#"+id).textContent=Math.round(val)});
+  if($("#dailyCaloriesBar"))$("#dailyCaloriesBar").style.width=Math.min(100,calories/target.calories*100)+"%";
+  if($("#dailyProteinBar"))$("#dailyProteinBar").style.width=Math.min(100,protein/target.protein*100)+"%";
+  if($("#dailyWaterBar"))$("#dailyWaterBar").style.width=Math.min(100,water/8*100)+"%";
+
+  if($("#todayMealList"))$("#todayMealList").innerHTML=rows.length?rows.map(row=>`
+    <div class="compact-item">
+      <div><h4>${safe(row.name)}</h4><small>${safe(row.type)} · ${row.calories||0} ${toolT("kcal")} · ${row.protein||0}${toolT("grams")}</small></div>
+      <button class="remove-mini" data-remove-daily="${row.id}">${toolT("delete")}</button>
+    </div>`).join(""):`<div class="empty-mini">${toolT("emptyMeals")}</div>`;
+
+  const challenges=[
+    {icon:"💧",text:toolT("waterChallenge"),done:water>=8},
+    {icon:"🍽️",text:toolT("mealChallenge"),done:rows.length>0},
+    {icon:"📋",text:toolT("planChallenge"),done:!!currentPlan},
+    {icon:"📈",text:toolT("progressChallenge"),done:progressData().some(x=>x.date===todayKey())}
+  ];
+  const score=challenges.filter(x=>x.done).length;
+  if($("#challengeScore"))$("#challengeScore").textContent=`${score}/4`;
+  if($("#challengeTitle"))$("#challengeTitle").textContent=toolT("challengeTitle");
+  if($("#challengeList"))$("#challengeList").innerHTML=challenges.map(x=>`<div class="challenge-item ${x.done?"done":""}"><span>${x.icon}</span><b>${x.text}</b></div>`).join("");
+}
+
+$("#addQuickMealBtn")?.addEventListener("click",()=>{
+  const name=$("#quickMealName").value.trim();
+  if(!name)return alert(toolT("mealRequired"));
+  const rows=dailyLog();
+  rows.push({id:String(Date.now()),name,type:$("#quickMealType").value,calories:+$("#quickMealCalories").value||0,protein:+$("#quickMealProtein").value||0});
+  saveDailyLog(rows);
+  $("#quickMealName").value="";$("#quickMealCalories").value="";$("#quickMealProtein").value="";
+  addPoints(5,"meal-log");renderDailyTools();
+});
+$("#clearTodayLogBtn")?.addEventListener("click",()=>{saveDailyLog([]);renderDailyTools()});
+document.addEventListener("click",event=>{
+  const btn=event.target.closest("[data-remove-daily]");
+  if(btn){saveDailyLog(dailyLog().filter(x=>x.id!==btn.dataset.removeDaily));renderDailyTools()}
+});
+
+function pantryData(){return readLocal(TOOL_STORE.pantry,[])}
+function renderPantry(){
+  const rows=pantryData();
+  if($("#pantryCount"))$("#pantryCount").textContent=rows.length;
+  if($("#pantryList"))$("#pantryList").innerHTML=rows.length?rows.map((item,index)=>`<span class="pantry-chip">${safe(item)}<button data-remove-pantry="${index}">×</button></span>`).join(""):`<div class="empty-mini">${toolT("emptyPantry")}</div>`;
+}
+function addPantryItems(){
+  const input=$("#pantryItemInput");
+  const values=input.value.split(/[,،\n]/).map(x=>x.trim()).filter(Boolean);
+  if(!values.length)return alert(toolT("itemRequired"));
+  writeLocal(TOOL_STORE.pantry,[...new Set([...pantryData(),...values])]);
+  input.value="";addPoints(2,"pantry");renderPantry();
+}
+$("#addPantryItemBtn")?.addEventListener("click",addPantryItems);
+$("#pantryItemInput")?.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();addPantryItems()}});
+document.addEventListener("click",event=>{
+  const btn=event.target.closest("[data-remove-pantry]");
+  if(btn){const rows=pantryData();rows.splice(+btn.dataset.removePantry,1);writeLocal(TOOL_STORE.pantry,rows);renderPantry()}
+});
+$("#pantrySuggestBtn")?.addEventListener("click",async()=>{
+  const items=pantryData();
+  if(!items.length)return alert(toolT("emptyPantry"));
+  const box=$("#pantryAiResult");box.hidden=false;box.textContent=toolT("ideasLoading");
+  try{
+    const prompt=`You are a practical nutrition chef. Language: ${currentLanguage==="ar"?"Arabic":"English"}.
+Available ingredients: ${items.join(", ")}.
+Servings: ${$("#pantryServings").value}. Maximum preparation time: ${$("#pantryTime").value} minutes.
+Suggest 3 realistic meals using mainly these ingredients. For each give name, quantities, steps, estimated calories and protein. Mention only essential missing ingredients. Use clear headings and bullets.`;
+    box.textContent=await geminiText(prompt,false);addPoints(8,"pantry-ai");
+  }catch(error){box.textContent=error.message}
+});
+
+async function lookupBarcode(code){
+  const status=$("#barcodeStatus"),result=$("#productResult");
+  status.textContent=toolT("scanning");
+  try{
+    const data=await apiRequest(`/api/product?code=${encodeURIComponent(code)}`,{method:"GET",headers:{"Content-Type":"application/json"}});
+    const p=data.product;
+    if(!p)throw new Error(toolT("productNotFound"));
+    status.textContent="";
+    result.classList.remove("empty-tool-result");
+    result.innerHTML=`
+      <div class="product-head">
+        ${p.image?`<img src="${safe(p.image)}" alt="${safe(p.name)}">`:""}
+        <div><h4>${safe(p.name||toolT("unknown"))}</h4><small>${safe(p.brand||"")} · ${safe(p.quantity||"")}</small></div>
+      </div>
+      <div class="product-stats">
+        <div class="product-stat"><b>${Math.round(p.calories||0)}</b><span>${toolT("kcal")} / 100g</span></div>
+        <div class="product-stat"><b>${p.protein||0}${toolT("grams")}</b><span>${toolT("protein")}</span></div>
+        <div class="product-stat"><b>${safe(p.grade||"-").toUpperCase()}</b><span>${toolT("healthScore")}</span></div>
+      </div>
+      <button class="btn primary" id="addScannedProductBtn" type="button" style="margin-top:12px">${toolT("addProductToLog")}</button>`;
+    $("#addScannedProductBtn")?.addEventListener("click",()=>{
+      const rows=dailyLog();rows.push({id:String(Date.now()),name:p.name||toolT("unknown"),type:"Snack",calories:Math.round(p.calories||0),protein:+p.protein||0});
+      saveDailyLog(rows);renderDailyTools();addPoints(4,"barcode");status.textContent=toolT("productAdded");
+    });
+  }catch(error){status.textContent=error.message;result.textContent=toolT("noProduct");result.classList.add("empty-tool-result")}
+}
+$("#lookupBarcodeBtn")?.addEventListener("click",()=>{const code=$("#barcodeInput").value.trim();if(code)lookupBarcode(code)});
+$("#barcodeImageInput")?.addEventListener("change",async event=>{
+  const file=event.target.files?.[0];if(!file)return;
+  if(!("BarcodeDetector" in window)){ $("#barcodeStatus").textContent=toolT("unsupportedScanner");return }
+  $("#barcodeStatus").textContent=toolT("scanning");
+  try{
+    const bitmap=await createImageBitmap(file);
+    const detector=new BarcodeDetector({formats:["ean_13","ean_8","upc_a","upc_e","code_128"]});
+    const codes=await detector.detect(bitmap);
+    const code=codes[0]?.rawValue;
+    if(!code)throw new Error(toolT("noBarcode"));
+    $("#barcodeInput").value=code;await lookupBarcode(code);
+  }catch(error){$("#barcodeStatus").textContent=error.message||toolT("noBarcode")}
+});
+
+$("#voiceMealBtn")?.addEventListener("click",()=>{
+  const SpeechRecognition=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SpeechRecognition)return alert(toolT("voiceUnsupported"));
+  const recognition=new SpeechRecognition();
+  recognition.lang=currentLanguage==="ar"?"ar-EG":"en-US";
+  recognition.interimResults=false;recognition.maxAlternatives=1;
+  $("#voiceMealBtn").classList.add("listening");$("#quickMealName").placeholder=toolT("listening");
+  recognition.onresult=e=>{
+    const speech=e.results[0][0].transcript;
+    $("#quickMealName").value=speech;
+    const calories=speech.match(/(\d{2,4})\s*(?:calories|calorie|سعرة|سعر)/i);
+    if(calories)$("#quickMealCalories").value=calories[1];
+  };
+  recognition.onend=()=>{$("#voiceMealBtn").classList.remove("listening");$("#quickMealName").placeholder=toolT("mealPlaceholder")};
+  recognition.onerror=recognition.onend;
+  recognition.start();
+});
+
+$("#compareMealsBtn")?.addEventListener("click",async()=>{
+  const a=$("#compareA").value.trim(),b=$("#compareB").value.trim();
+  if(!a||!b)return;
+  const box=$("#compareResult");box.hidden=false;box.textContent=toolT("compareLoading");
+  try{
+    box.textContent=await geminiText(`Compare these two meals or food products for nutrition, protein, calories, satiety, cost and best use case. Respond in ${currentLanguage==="ar"?"Arabic":"English"}. Give a balanced conclusion and do not invent exact values unless provided.
+A: ${a}
+B: ${b}`,false);addPoints(5,"compare");
+  }catch(error){box.textContent=error.message}
+});
+
+const PRESETS={
+  student:{activity:"1.375",meals:"3",budget:"اقتصادية",likes:"eggs, oats, rice, chicken, yogurt",avoid:"",medical:"Quick portable meals for study days"},
+  office:{activity:"1.2",meals:"3",budget:"متوسطة",likes:"salads, chicken, rice, yogurt",avoid:"",medical:"Desk job; prioritize fiber and meal prep"},
+  athlete:{activity:"1.725",meals:"5",budget:"مرنة",likes:"chicken, beef, rice, oats, eggs, yogurt",avoid:"",medical:"Training-focused meals and higher protein"},
+  busy:{activity:"1.375",meals:"3",budget:"متوسطة",likes:"sandwiches, yogurt, fruit, ready salads",avoid:"",medical:"Meals under 20 minutes"},
+  budget:{activity:"1.375",meals:"3",budget:"اقتصادية",likes:"eggs, lentils, beans, rice, oats",avoid:"",medical:"Low-cost ingredients and batch cooking"},
+  nocook:{activity:"1.2",meals:"3",budget:"متوسطة",likes:"yogurt, fruit, tuna, bread, cheese",avoid:"",medical:"No-cook meals only"}
+};
+document.querySelectorAll("[data-preset]").forEach(btn=>btn.addEventListener("click",()=>{
+  const p=PRESETS[btn.dataset.preset];if(!p)return;
+  Object.entries(p).forEach(([id,value])=>{const el=$("#"+id);if(el){el.value=value;el.dispatchEvent(new Event("input",{bubbles:true}))}});
+  $("#presetStatus").textContent=toolT("presetApplied");addPoints(3,"preset");
+}));
+
+function ramadanSettings(){return readLocal(TOOL_STORE.ramadan,{enabled:false,iftar:"18:30",suhoor:"04:30",goal:"maintain"})}
+function saveRamadan(){
+  writeLocal(TOOL_STORE.ramadan,{enabled:$("#ramadanToggle").checked,iftar:$("#iftarTime").value,suhoor:$("#suhoorTime").value,goal:$("#ramadanGoal").value});
+}
+$("#ramadanToggle")?.addEventListener("change",()=>{$("#ramadanFields").hidden=!$("#ramadanToggle").checked;saveRamadan()});
+["iftarTime","suhoorTime","ramadanGoal"].forEach(id=>$("#"+id)?.addEventListener("change",saveRamadan));
+$("#generateRamadanBtn")?.addEventListener("click",async()=>{
+  const box=$("#ramadanResult");box.hidden=false;box.textContent=toolT("ramadanLoading");
+  const s=ramadanSettings(),u=collectData(),c=calculateNutrition(u);
+  try{
+    box.textContent=await geminiText(`Create safe, practical Ramadan nutrition guidance in ${currentLanguage==="ar"?"Arabic":"English"}.
+User goal: ${s.goal}. Iftar: ${s.iftar}. Suhoor ends: ${s.suhoor}.
+Daily target: ${c.calories} calories and ${c.protein}g protein.
+Include hydration distribution, iftar, snack, suhoor, caffeine, training timing, and a warning for medical conditions.`,false);addPoints(8,"ramadan");
+  }catch(error){box.textContent=error.message}
+});
+
+function reminderData(){return readLocal(TOOL_STORE.reminders,[])}
+function renderReminders(){
+  const rows=reminderData();
+  if($("#reminderList"))$("#reminderList").innerHTML=rows.length?rows.map(row=>`<div class="compact-item"><div><h4>${safe(row.label)}</h4><small>${row.time}</small></div><button class="remove-mini" data-remove-reminder="${row.id}">${toolT("delete")}</button></div>`).join(""):`<div class="empty-mini">${toolT("noReminders")}</div>`;
+}
+$("#enableNotificationsBtn")?.addEventListener("click",async()=>{
+  if(!("Notification" in window))return alert(toolT("notificationDenied"));
+  const p=await Notification.requestPermission();
+  alert(p==="granted"?toolT("notificationGranted"):toolT("notificationDenied"));
+});
+$("#addReminderBtn")?.addEventListener("click",()=>{
+  const type=$("#reminderType").value,time=$("#reminderTime").value;
+  const label=$("#reminderType").selectedOptions[0].textContent;
+  const rows=reminderData();rows.push({id:String(Date.now()),type,time,label,lastShown:null});writeLocal(TOOL_STORE.reminders,rows);
+  renderReminders();addPoints(2,"reminder");$("#installStatus").textContent=toolT("reminderAdded");
+});
+document.addEventListener("click",event=>{
+  const btn=event.target.closest("[data-remove-reminder]");
+  if(btn){writeLocal(TOOL_STORE.reminders,reminderData().filter(x=>x.id!==btn.dataset.removeReminder));renderReminders()}
+});
+setInterval(()=>{
+  const now=new Date(),hhmm=now.toTimeString().slice(0,5),today=todayKey();
+  const rows=reminderData();let changed=false;
+},60000);
+
+setInterval(()=>{
+  if(Notification?.permission!=="granted")return;
+  const now=new Date(),hhmm=now.toTimeString().slice(0,5),today=todayKey();
+  const rows=reminderData();let changed=false;
+  rows.forEach(row=>{
+    if(row.time===hhmm&&row.lastShown!==today){
+      new Notification("HealthAi",{body:row.label,icon:"/icon.svg"});
+      row.lastShown=today;changed=true;
+    }
+  });
+  if(changed)writeLocal(TOOL_STORE.reminders,rows);
+},30000);
+
+let deferredInstallPrompt=null;
+window.addEventListener("beforeinstallprompt",event=>{event.preventDefault();deferredInstallPrompt=event;$("#installStatus").textContent=""});
+$("#installAppBtn")?.addEventListener("click",async()=>{
+  if(!deferredInstallPrompt){$("#installStatus").textContent=toolT("installed");return}
+  deferredInstallPrompt.prompt();await deferredInstallPrompt.userChoice;deferredInstallPrompt=null;
+});
+if("serviceWorker" in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("/sw.js").catch(console.warn));
+
+function weeklyStats(){
+  const all=readLocal(TOOL_STORE.daily,{});
+  const dates=[...Array(7)].map((_,i)=>{const d=new Date();d.setDate(d.getDate()-i);return d.toISOString().slice(0,10)});
+  const meals=dates.flatMap(date=>all[date]||[]);
+  const caloriesByDay=dates.map(date=>(all[date]||[]).reduce((s,x)=>s+(+x.calories||0),0)).filter(x=>x>0);
+  const progress=progressData().filter(x=>dates.includes(x.date));
+  return{
+    meals:meals.length,
+    avgCalories:caloriesByDay.length?Math.round(caloriesByDay.reduce((a,b)=>a+b,0)/caloriesByDay.length):0,
+    weightEntries:progress.length,
+    water:getWater(),
+    progress
+  };
+}
+function renderWeeklyMetrics(){
+  const s=weeklyStats();
+  if($("#weeklyReportMetrics"))$("#weeklyReportMetrics").innerHTML=[
+    [toolT("metricMeals"),s.meals],[toolT("metricCalories"),s.avgCalories||"—"],[toolT("metricWeight"),s.weightEntries],[toolT("metricWater"),`${s.water}/8`]
+  ].map(([label,value])=>`<div class="report-metric"><small>${label}</small><b>${value}</b></div>`).join("");
+}
+$("#generateWeeklyReportBtn")?.addEventListener("click",async()=>{
+  const s=weeklyStats(),box=$("#weeklyReportResult");box.hidden=false;box.textContent=toolT("reportLoading");
+  try{
+    box.textContent=await geminiText(`Write a concise weekly nutrition progress report in ${currentLanguage==="ar"?"Arabic":"English"}.
+Meals logged: ${s.meals}; average logged calories: ${s.avgCalories}; weight entries: ${JSON.stringify(s.progress)}; water today: ${s.water}/8.
+Give wins, gaps, three practical next-week actions, and a gentle disclaimer. ${s.meals+s.weightEntries===0?toolT("noWeeklyData"):""}`,false);addPoints(10,"weekly-report");
+  }catch(error){box.textContent=error.message}
+});
+
+$("#printPlanBtn")?.addEventListener("click",()=>{openPage("page-plan");setTimeout(()=>window.print(),300)});
+$("#shareSummaryBtn")?.addEventListener("click",async()=>{
+  const s=weeklyStats();
+  const text=`HealthAi — ${toolT("metricMeals")}: ${s.meals}, ${toolT("metricCalories")}: ${s.avgCalories}, ${toolT("metricWater")}: ${s.water}/8`;
+  if(navigator.share){await navigator.share({title:"HealthAi",text}).catch(()=>{})}else{await navigator.clipboard.writeText(text);alert(toolT("shared"))}
+});
+$("#exportDataBtn")?.addEventListener("click",()=>{
+  const data={version:1,exportedAt:new Date().toISOString(),localStorage:{}};
+  for(let i=0;i<localStorage.length;i++){const key=localStorage.key(i);if(key?.startsWith("healthai")||key?.startsWith("nutriai"))data.localStorage[key]=localStorage.getItem(key)}
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
+  const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=`healthai-backup-${todayKey()}.json`;a.click();URL.revokeObjectURL(a.href);
+});
+$("#importDataInput")?.addEventListener("change",async event=>{
+  try{
+    const data=JSON.parse(await event.target.files[0].text());
+    if(!data?.localStorage)throw new Error();
+    Object.entries(data.localStorage).forEach(([key,value])=>localStorage.setItem(key,value));
+    alert(toolT("imported"));location.reload();
+  }catch{alert(toolT("invalidBackup"))}
+});
+
+function initSmartTools(){
+  toolPanelOpen(localStorage.getItem("healthai_tool_panel")||"daily");
+  const r=ramadanSettings();
+  if($("#ramadanToggle"))$("#ramadanToggle").checked=!!r.enabled;
+  if($("#ramadanFields"))$("#ramadanFields").hidden=!r.enabled;
+  if($("#iftarTime"))$("#iftarTime").value=r.iftar||"18:30";
+  if($("#suhoorTime"))$("#suhoorTime").value=r.suhoor||"04:30";
+  if($("#ramadanGoal"))$("#ramadanGoal").value=r.goal||"maintain";
+  applyToolsLanguage();
+}
+
+
 (function init(){
   try{
     loadUser();
@@ -1077,6 +1557,7 @@ document.addEventListener("click",event=>{
     if(savedPlan){currentPlan=savedPlan;renderPlan(savedPlan)}
 
     applyLanguage(localStorage.getItem(STORE.language)||"en");
+    initSmartTools();
     renderMealDiary();
     renderProgress();
     updateCommitment();
@@ -1086,3 +1567,5 @@ document.addEventListener("click",event=>{
     showError(error);
   }
 })();
+
+window.addEventListener("storage",()=>{try{renderDailyTools();renderWeeklyMetrics()}catch{}});

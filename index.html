@@ -4,6 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#0b6b4b">
+<meta name="description" content="HealthAi smart nutrition planner, tracker and meal assistant">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/icon.svg">
 <title>HealthAi — Smart Nutrition</title>
 <link rel="stylesheet" href="/styles.css">
 </head>
@@ -156,7 +159,15 @@
         <strong id="homeProgressTitle">Progress</strong>
         <span id="homeProgressText">Track weight and measurements</span>
       </button>
-    </div>
+    
+      <button class="home-feature" type="button" data-page-target="page-tools">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 3v18M3 12h18"/><circle cx="12" cy="12" r="9"/></svg>
+        </div>
+        <strong data-tool-i18n="smartTools">Smart Tools</strong>
+        <span data-tool-i18n="smartToolsText">Tracker, pantry, scanner and reports</span>
+      </button>
+</div>
 
     <div class="home-mini-dashboard">
       <div class="dash-card">
@@ -310,6 +321,285 @@
   <div class="container page-shell">
 <div class="card progress"><div class="section-title"><h3 id="progressTitle">Weight and measurements</h3><span class="badge" id="progressSummary">No data yet</span></div><div class="progress-form"><div><label id="labelProgressDate">Date</label><input id="progressDate" type="date"></div><div><label id="labelProgressWeight">Weight</label><input id="progressWeight" type="number" step=".1"></div><div><label id="labelProgressWaist">Waist</label><input id="progressWaist" type="number" step=".1"></div><div><label id="labelProgressNote">Note</label><input id="progressNote"></div><button class="btn primary" id="addProgress" type="button">Add entry</button></div><div id="chart" class="chart"></div><div id="progressList" class="progress-list"></div></div>
 </div></div></section>
+
+<section id="page-tools" class="app-page">
+  <div class="container page-titlebar">
+    <div>
+      <small>HealthAi</small>
+      <h2 data-tool-i18n="toolsTitle">Smart Tools</h2>
+    </div>
+    <span class="badge" data-tool-i18n="localBadge">Saved locally</span>
+  </div>
+
+  <div class="container page-shell tools-shell">
+    <section class="tools-hero card">
+      <div>
+        <span class="eyebrow" data-tool-i18n="commandCenter">Health command center</span>
+        <h3 data-tool-i18n="toolsHeroTitle">Everything you need for a healthier day</h3>
+        <p data-tool-i18n="toolsHeroText">Track meals, use your pantry, scan products, create reminders and review your weekly progress.</p>
+      </div>
+      <div class="points-orb">
+        <small data-tool-i18n="points">Points</small>
+        <strong id="healthPoints">0</strong>
+        <span id="healthStreak">0 day streak</span>
+      </div>
+    </section>
+
+    <div class="tool-tabs" id="toolTabs" role="tablist">
+      <button class="tool-tab active" data-tool-panel="daily" type="button">
+        <svg viewBox="0 0 24 24"><path d="M4 4h16v16H4Z"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>
+        <span data-tool-i18n="dailyTracker">Daily Tracker</span>
+      </button>
+      <button class="tool-tab" data-tool-panel="pantry" type="button">
+        <svg viewBox="0 0 24 24"><path d="M4 7h16v13H4Z"/><path d="M7 7V4h10v3M8 11h8"/></svg>
+        <span data-tool-i18n="pantry">Pantry</span>
+      </button>
+      <button class="tool-tab" data-tool-panel="scanner" type="button">
+        <svg viewBox="0 0 24 24"><path d="M4 7V4h3M17 4h3v3M20 17v3h-3M7 20H4v-3"/><path d="M7 9v6M10 9v6M14 9v6M17 9v6"/></svg>
+        <span data-tool-i18n="scanner">Scanner</span>
+      </button>
+      <button class="tool-tab" data-tool-panel="coach" type="button">
+        <svg viewBox="0 0 24 24"><path d="M12 3v18M3 12h18"/><circle cx="12" cy="12" r="9"/></svg>
+        <span data-tool-i18n="coach">Coach</span>
+      </button>
+      <button class="tool-tab" data-tool-panel="reports" type="button">
+        <svg viewBox="0 0 24 24"><path d="M4 19V9M10 19V5M16 19v-8M22 19V3"/></svg>
+        <span data-tool-i18n="reports">Reports</span>
+      </button>
+    </div>
+
+    <section class="tool-panel active" data-tool-panel-content="daily">
+      <div class="daily-summary-grid">
+        <article class="metric-card">
+          <small data-tool-i18n="caloriesToday">Calories today</small>
+          <strong><span id="dailyCaloriesValue">0</span> / <span id="dailyCaloriesTarget">0</span></strong>
+          <div class="metric-progress"><i id="dailyCaloriesBar"></i></div>
+        </article>
+        <article class="metric-card">
+          <small data-tool-i18n="proteinToday">Protein today</small>
+          <strong><span id="dailyProteinValue">0</span> / <span id="dailyProteinTarget">0</span> g</strong>
+          <div class="metric-progress"><i id="dailyProteinBar"></i></div>
+        </article>
+        <article class="metric-card">
+          <small data-tool-i18n="waterToday">Water today</small>
+          <strong><span id="dailyWaterValue">0</span> / 8</strong>
+          <div class="metric-progress"><i id="dailyWaterBar"></i></div>
+        </article>
+      </div>
+
+      <div class="tools-grid two">
+        <article class="card tool-card">
+          <div class="tool-card-head">
+            <div>
+              <small data-tool-i18n="quickLog">Quick log</small>
+              <h3 data-tool-i18n="addMeal">Add a meal</h3>
+            </div>
+            <button class="icon-action" id="voiceMealBtn" type="button" aria-label="Voice meal entry">
+              <svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3M9 21h6"/></svg>
+            </button>
+          </div>
+          <div class="form-stack">
+            <div class="field">
+              <label data-tool-i18n="mealName">Meal name</label>
+              <input id="quickMealName" data-tool-placeholder="mealPlaceholder" placeholder="e.g. chicken and rice">
+            </div>
+            <div class="grid3">
+              <div class="field"><label data-tool-i18n="calories">Calories</label><input id="quickMealCalories" type="number" min="0"></div>
+              <div class="field"><label data-tool-i18n="protein">Protein</label><input id="quickMealProtein" type="number" min="0"></div>
+              <div class="field"><label data-tool-i18n="mealType">Meal type</label>
+                <select id="quickMealType">
+                  <option value="Breakfast">Breakfast</option>
+                  <option value="Lunch">Lunch</option>
+                  <option value="Dinner">Dinner</option>
+                  <option value="Snack">Snack</option>
+                </select>
+              </div>
+            </div>
+            <button class="btn primary" id="addQuickMealBtn" type="button" data-tool-i18n="addToToday">Add to today</button>
+          </div>
+        </article>
+
+        <article class="card tool-card">
+          <div class="tool-card-head">
+            <div>
+              <small data-tool-i18n="todayLog">Today log</small>
+              <h3 data-tool-i18n="mealsAndMacros">Meals & macros</h3>
+            </div>
+            <button class="small-btn" id="clearTodayLogBtn" type="button" data-tool-i18n="clear">Clear</button>
+          </div>
+          <div id="todayMealList" class="compact-list"></div>
+        </article>
+      </div>
+
+      <article class="card tool-card challenge-card">
+        <div class="tool-card-head">
+          <div><small data-tool-i18n="challenge">Daily challenge</small><h3 id="challengeTitle">Complete your healthy basics</h3></div>
+          <span class="challenge-score" id="challengeScore">0/4</span>
+        </div>
+        <div id="challengeList" class="challenge-list"></div>
+      </article>
+    </section>
+
+    <section class="tool-panel" data-tool-panel-content="pantry">
+      <div class="tools-grid two">
+        <article class="card tool-card">
+          <div class="tool-card-head">
+            <div><small data-tool-i18n="ingredientsHome">Ingredients at home</small><h3 data-tool-i18n="pantryTitle">Smart pantry</h3></div>
+            <span class="badge" id="pantryCount">0</span>
+          </div>
+          <div class="inline-form">
+            <input id="pantryItemInput" data-tool-placeholder="pantryPlaceholder" placeholder="e.g. eggs, oats, yogurt">
+            <button class="btn primary" id="addPantryItemBtn" type="button" data-tool-i18n="add">Add</button>
+          </div>
+          <div id="pantryList" class="chip-list"></div>
+        </article>
+
+        <article class="card tool-card ai-tool-card">
+          <div class="tool-card-head">
+            <div><small>AI</small><h3 data-tool-i18n="cookFromPantry">Cook from my pantry</h3></div>
+          </div>
+          <p data-tool-i18n="pantryAiText">Generate practical meal ideas using only the ingredients you already have.</p>
+          <div class="grid2">
+            <div class="field"><label data-tool-i18n="servings">Servings</label><input id="pantryServings" type="number" min="1" max="8" value="2"></div>
+            <div class="field"><label data-tool-i18n="maxTime">Max time</label><select id="pantryTime"><option value="15">15 min</option><option value="30" selected>30 min</option><option value="60">60 min</option></select></div>
+          </div>
+          <button class="btn primary" id="pantrySuggestBtn" type="button" data-tool-i18n="generateIdeas">Generate meal ideas</button>
+          <div id="pantryAiResult" class="tool-result" hidden></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="tool-panel" data-tool-panel-content="scanner">
+      <div class="tools-grid two">
+        <article class="card tool-card">
+          <div class="tool-card-head">
+            <div><small data-tool-i18n="barcode">Barcode</small><h3 data-tool-i18n="productScanner">Product scanner</h3></div>
+          </div>
+          <p data-tool-i18n="scannerText">Enter a barcode or scan it from a product photo when your browser supports barcode detection.</p>
+          <div class="inline-form">
+            <input id="barcodeInput" inputmode="numeric" placeholder="3017620422003">
+            <button class="btn primary" id="lookupBarcodeBtn" type="button" data-tool-i18n="lookup">Look up</button>
+          </div>
+          <label class="upload-action compact-upload">
+            <input id="barcodeImageInput" type="file" accept="image/*" capture="environment">
+            <svg viewBox="0 0 24 24"><path d="M4 7h4l2-3h4l2 3h4v13H4Z"/><circle cx="12" cy="13" r="4"/></svg>
+            <span data-tool-i18n="scanPhoto">Scan product photo</span>
+          </label>
+          <div id="barcodeStatus" class="status-line"></div>
+        </article>
+
+        <article class="card tool-card">
+          <div class="tool-card-head">
+            <div><small data-tool-i18n="nutritionFacts">Nutrition facts</small><h3 data-tool-i18n="productResult">Product result</h3></div>
+          </div>
+          <div id="productResult" class="product-result empty-tool-result" data-tool-i18n="noProduct">No product selected yet.</div>
+        </article>
+      </div>
+
+      <article class="card tool-card comparison-card">
+        <div class="tool-card-head">
+          <div><small data-tool-i18n="comparison">Comparison</small><h3 data-tool-i18n="compareMeals">Compare two meals or products</h3></div>
+        </div>
+        <div class="grid2">
+          <textarea id="compareA" data-tool-placeholder="compareAPlaceholder" placeholder="First meal or product"></textarea>
+          <textarea id="compareB" data-tool-placeholder="compareBPlaceholder" placeholder="Second meal or product"></textarea>
+        </div>
+        <button class="btn primary" id="compareMealsBtn" type="button" data-tool-i18n="compareNow">Compare now</button>
+        <div id="compareResult" class="tool-result" hidden></div>
+      </article>
+    </section>
+
+    <section class="tool-panel" data-tool-panel-content="coach">
+      <div class="tools-grid two">
+        <article class="card tool-card">
+          <div class="tool-card-head">
+            <div><small data-tool-i18n="lifestyle">Lifestyle</small><h3 data-tool-i18n="quickProfile">Quick profile presets</h3></div>
+          </div>
+          <div class="preset-grid" id="lifestylePresets">
+            <button type="button" data-preset="student"><span>🎓</span><b data-tool-i18n="student">Student</b></button>
+            <button type="button" data-preset="office"><span>💻</span><b data-tool-i18n="office">Office worker</b></button>
+            <button type="button" data-preset="athlete"><span>🏃</span><b data-tool-i18n="athlete">Athlete</b></button>
+            <button type="button" data-preset="busy"><span>⏱️</span><b data-tool-i18n="busy">Busy schedule</b></button>
+            <button type="button" data-preset="budget"><span>💰</span><b data-tool-i18n="budgetProfile">Budget meals</b></button>
+            <button type="button" data-preset="nocook"><span>🥪</span><b data-tool-i18n="noCook">No cooking</b></button>
+          </div>
+          <p id="presetStatus" class="status-line"></p>
+        </article>
+
+        <article class="card tool-card ramadan-card">
+          <div class="tool-card-head">
+            <div><small data-tool-i18n="seasonalMode">Seasonal mode</small><h3 data-tool-i18n="ramadanMode">Ramadan planner</h3></div>
+            <label class="switch"><input id="ramadanToggle" type="checkbox"><span></span></label>
+          </div>
+          <div id="ramadanFields" class="form-stack" hidden>
+            <div class="grid2">
+              <div class="field"><label data-tool-i18n="iftarTime">Iftar time</label><input id="iftarTime" type="time" value="18:30"></div>
+              <div class="field"><label data-tool-i18n="suhoorTime">Suhoor ends</label><input id="suhoorTime" type="time" value="04:30"></div>
+            </div>
+            <div class="field"><label data-tool-i18n="ramadanGoal">Ramadan goal</label>
+              <select id="ramadanGoal"><option value="maintain">Maintain</option><option value="loss">Fat loss</option><option value="performance">Training performance</option></select>
+            </div>
+            <button class="btn primary" id="generateRamadanBtn" type="button" data-tool-i18n="generateRamadan">Create Ramadan guidance</button>
+            <div id="ramadanResult" class="tool-result" hidden></div>
+          </div>
+        </article>
+      </div>
+
+      <div class="tools-grid two">
+        <article class="card tool-card">
+          <div class="tool-card-head">
+            <div><small data-tool-i18n="reminders">Reminders</small><h3 data-tool-i18n="healthyReminders">Healthy reminders</h3></div>
+            <button class="small-btn" id="enableNotificationsBtn" type="button" data-tool-i18n="enable">Enable</button>
+          </div>
+          <div class="grid2">
+            <div class="field"><label data-tool-i18n="reminderType">Type</label>
+              <select id="reminderType"><option value="water">Water</option><option value="meal">Meal</option><option value="weight">Weight</option><option value="prep">Meal prep</option></select>
+            </div>
+            <div class="field"><label data-tool-i18n="time">Time</label><input id="reminderTime" type="time" value="12:00"></div>
+          </div>
+          <button class="btn primary" id="addReminderBtn" type="button" data-tool-i18n="addReminder">Add reminder</button>
+          <div id="reminderList" class="compact-list"></div>
+        </article>
+
+        <article class="card tool-card">
+          <div class="tool-card-head">
+            <div><small>PWA</small><h3 data-tool-i18n="installApp">Install HealthAi</h3></div>
+          </div>
+          <p data-tool-i18n="installText">Install the website like an app for a cleaner full-screen experience and offline shell.</p>
+          <button class="btn primary" id="installAppBtn" type="button" data-tool-i18n="install">Install app</button>
+          <p id="installStatus" class="status-line"></p>
+        </article>
+      </div>
+    </section>
+
+    <section class="tool-panel" data-tool-panel-content="reports">
+      <div class="tools-grid two">
+        <article class="card tool-card">
+          <div class="tool-card-head">
+            <div><small data-tool-i18n="weeklyReview">Weekly review</small><h3 data-tool-i18n="smartReport">Smart progress report</h3></div>
+          </div>
+          <div id="weeklyReportMetrics" class="report-metrics"></div>
+          <button class="btn primary" id="generateWeeklyReportBtn" type="button" data-tool-i18n="generateReport">Generate report</button>
+          <div id="weeklyReportResult" class="tool-result" hidden></div>
+        </article>
+
+        <article class="card tool-card">
+          <div class="tool-card-head">
+            <div><small data-tool-i18n="exportShare">Export & share</small><h3 data-tool-i18n="yourData">Your local data</h3></div>
+          </div>
+          <div class="export-actions">
+            <button class="btn soft" id="printPlanBtn" type="button" data-tool-i18n="printPlan">Print plan</button>
+            <button class="btn soft" id="shareSummaryBtn" type="button" data-tool-i18n="shareSummary">Share summary</button>
+            <button class="btn soft" id="exportDataBtn" type="button" data-tool-i18n="exportBackup">Export backup</button>
+            <label class="btn soft file-btn"><input id="importDataInput" type="file" accept="application/json"><span data-tool-i18n="importBackup">Import backup</span></label>
+          </div>
+          <p class="privacy-note" data-tool-i18n="localPrivacy">Your health data remains in this browser unless you export it.</p>
+        </article>
+      </div>
+    </section>
+  </div>
+</section>
+
 </main>
 
 <div id="replaceModal" class="modal"><div class="modal-card"><h3 id="replaceModalTitle">Replace meal</h3><p id="replaceMealName"></p><div class="field"><label id="replaceTypeLabel">Replacement type</label><select id="replaceType"><option>بنفس السعرات والبروتين تقريبًا</option><option>أرخص</option><option>أسرع في التحضير</option><option>بدون طبخ</option><option>بروتين أعلى</option><option>كربوهيدرات أقل</option></select></div><div class="actions"><button class="btn primary" id="confirmReplace" type="button">Create replacement</button><button class="btn soft" id="closeModal" type="button">Cancel</button></div></div></div>
@@ -330,6 +620,10 @@
   </button>
   <button type="button" class="bottom-item" data-page="page-progress">
     <svg viewBox="0 0 24 24"><path d="M4 19V9M10 19V5M16 19v-8M22 19V3"/></svg><span id="navProgress">Progress</span>
+  </button>
+
+  <button type="button" class="bottom-item" data-page="page-tools">
+    <svg viewBox="0 0 24 24"><path d="M12 3v18M3 12h18"/><circle cx="12" cy="12" r="9"/></svg><span id="navTools">Tools</span>
   </button>
 </nav>
 
