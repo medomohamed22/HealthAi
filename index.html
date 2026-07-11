@@ -60,7 +60,7 @@
       <div>
         <span class="eyebrow dark-text">HealthAi</span>
         <h2 id="homeWelcomeTitle">All your health tools in one place</h2>
-        <p id="homeWelcomeText">Build a nutrition plan, chat with the assistant, analyze a meal photo or track your measurements.</p>
+        <p id="homeWelcomeText">Build a nutrition plan from verified recipe data, track meals and follow your progress.</p>
       </div>
       <div class="home-orb">
         <svg viewBox="0 0 24 24">
@@ -76,23 +76,7 @@
           <svg viewBox="0 0 24 24"><path d="M4 4h16v16H4Z"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>
         </div>
         <strong id="homePlanTitle">Nutrition Plan</strong>
-        <span id="homePlanText">Create a complete weekly plan</span>
-      </button>
-
-      <button class="home-feature" type="button" data-page-target="page-chat">
-        <div class="feature-icon">
-          <svg viewBox="0 0 24 24"><path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4Z"/></svg>
-        </div>
-        <strong id="homeChatTitle">Chat</strong>
-        <span id="homeChatText">Ask about meals and nutrition</span>
-      </button>
-
-      <button class="home-feature" type="button" data-page-target="page-analyzer">
-        <div class="feature-icon">
-          <svg viewBox="0 0 24 24"><path d="M4 7h4l2-3h4l2 3h4v13H4Z"/><circle cx="12" cy="13" r="4"/></svg>
-        </div>
-        <strong id="homeAnalyzeTitle">Photo Analysis</strong>
-        <span id="homeAnalyzeText">Estimate ingredients and calories</span>
+        <span id="homePlanText">Create a weekly plan from real recipes</span>
       </button>
 
       <button class="home-feature" type="button" data-page-target="page-progress">
@@ -154,16 +138,16 @@
 <div class="field"><label id="labelMedical">Health notes</label><textarea id="medical">None</textarea></div>
 <div id="localCalc" class="calc-box"><div><b id="calcBmi">—</b><span>BMI</span></div><div><b id="calcTdee">—</b><span>TDEE</span></div><div><b id="calcTarget">—</b><span data-i18n="targetCalories">Target calories</span></div></div>
 
-<div class="actions"><button class="btn primary" id="createPlanBtn" type="submit">Create 7-day plan</button></div>
+<div class="actions"><button class="btn primary" id="createPlanBtn" type="submit">Load 7-day meal plan</button></div>
 </form>
 
 <div>
 <div id="errorBox" class="error"></div>
-<div id="empty" class="card empty"><div><div style="font-size:3rem">🍽️</div><h2 id="emptyTitle">Your plan will appear here</h2><p id="emptyText">Complete your information, then create a personalized seven-day nutrition plan.</p></div></div>
+<div id="empty" class="card empty"><div><div style="font-size:3rem">🍽️</div><h2 id="emptyTitle">Your plan will appear here</h2><p id="emptyText">Complete your information, then load a seven-day plan from the meals database.</p></div></div>
 <div id="loading" class="card loading">
       <div class="loader-orbit"><div class="spinner"></div><span id="loadingSeconds">0s</span></div>
       <h3 id="loadingTitle">Creating your weekly plan</h3>
-      <p id="loadingText" style="color:var(--muted)">Preparing meals, nutrition targets and recipes.</p>
+      <p id="loadingText" style="color:var(--muted)">Fetching real recipes, calories and nutrition data.</p>
       <div class="loading-steps">
         <span class="active" id="loadStep1">Calculating targets</span>
         <span id="loadStep2">Building meals</span>
@@ -200,7 +184,7 @@
 
 
 </div></section></section>
-<section id="page-analyzer" class="app-page">
+<section id="page-analyzer" class="app-page ai-legacy-hidden" aria-hidden="true">
   <div class="container page-titlebar">
     <div><small>HealthAi</small><h2 id="analyzerPageTitle">Meal Photo Analysis</h2></div>
     <span class="badge">AI Vision</span>
@@ -247,7 +231,7 @@
 </div>
 
 </div></section>
-<section id="page-chat" class="app-page">
+<section id="page-chat" class="app-page ai-legacy-hidden" aria-hidden="true">
   <div class="container page-titlebar">
     <div><small>HealthAi</small><h2 id="chatPageTitle">Chat</h2></div>
     <span class="badge" id="chatBadge">Smart assistant</span>
@@ -297,7 +281,7 @@
         <svg viewBox="0 0 24 24"><path d="M4 7h16v13H4Z"/><path d="M7 7V4h10v3M8 11h8"/></svg>
         <span data-tool-i18n="pantry">Pantry</span>
       </button>
-      <button class="tool-tab" data-tool-panel="coach" type="button">
+      <button class="tool-tab ai-legacy-hidden" data-tool-panel="coach" type="button">
         <svg viewBox="0 0 24 24"><path d="M12 3v18M3 12h18"/><circle cx="12" cy="12" r="9"/></svg>
         <span data-tool-i18n="coach">Coach</span>
       </button>
@@ -393,7 +377,7 @@
           <div id="pantryList" class="chip-list"></div>
         </article>
 
-        <article class="card tool-card ai-tool-card">
+        <article class="card tool-card ai-tool-card ai-legacy-hidden">
           <div class="tool-card-head">
             <div><small>AI</small><h3 data-tool-i18n="cookFromPantry">Cook from my pantry</h3></div>
           </div>
@@ -407,7 +391,7 @@
         </article>
       </div>
 
-      <article class="card tool-card comparison-card">
+      <article class="card tool-card comparison-card ai-legacy-hidden">
         <div class="tool-card-head">
           <div><small data-tool-i18n="comparison">Comparison</small><h3 data-tool-i18n="compareMeals">Compare two meals or products</h3></div>
         </div>
@@ -420,7 +404,7 @@
       </article>
     </section>
 
-    <section class="tool-panel" data-tool-panel-content="coach">
+    <section class="tool-panel ai-legacy-hidden" data-tool-panel-content="coach">
       <div class="tools-grid two">
         <article class="card tool-card">
           <div class="tool-card-head">
@@ -505,18 +489,42 @@
 <div id="replaceModal" class="modal"><div class="modal-card"><h3 id="replaceModalTitle">Replace meal</h3><p id="replaceMealName"></p><div class="field"><label id="replaceTypeLabel">Replacement type</label><select id="replaceType"><option>بنفس السعرات والبروتين تقريبًا</option><option>أرخص</option><option>أسرع في التحضير</option><option>بدون طبخ</option><option>بروتين أعلى</option><option>كربوهيدرات أقل</option></select></div><div class="actions"><button class="btn primary" id="confirmReplace" type="button">Create replacement</button><button class="btn soft" id="closeModal" type="button">Cancel</button></div></div></div>
 
 
+
+<div class="floating-ai" id="floatingAi">
+  <button class="floating-ai-button" id="floatingAiButton" type="button" aria-label="فتح المساعد الذكي" aria-expanded="false">
+    <svg viewBox="0 0 24 24"><path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4Z"/><path d="M8 10h8M8 14h5"/></svg>
+    <span>AI</span>
+  </button>
+  <section class="floating-ai-panel" id="floatingAiPanel" hidden aria-label="محادثة HealthAi">
+    <header class="floating-ai-head">
+      <div><small>HealthAi</small><strong id="floatingAiTitle">المساعد الذكي</strong></div>
+      <button id="floatingAiClose" type="button" aria-label="إغلاق">×</button>
+    </header>
+    <div class="floating-ai-note" id="floatingAiNote">يستخدم بيانات ملفك الشخصي فقط. اسأل عن شرح غذائي، اطلب وجبة يومية، أو أرسل صورة لتحليلها.</div>
+    <div class="floating-ai-messages" id="floatingAiMessages">
+      <div class="floating-msg ai">مرحبًا! أقدر أشرح المحتوى الغذائي، أجهز لك وجبة يومية حسب بياناتك، أو أحلل صورة وجبة.</div>
+    </div>
+    <div class="floating-image-preview" id="floatingImagePreview" hidden>
+      <img id="floatingImageThumb" alt="الصورة المرفقة">
+      <button id="floatingRemoveImage" type="button">×</button>
+    </div>
+    <div class="floating-ai-compose">
+      <label class="floating-attach" for="floatingAiImage" aria-label="إرفاق صورة">
+        <svg viewBox="0 0 24 24"><path d="M21.4 11.6 12 21a6 6 0 0 1-8.5-8.5l10-10a4 4 0 0 1 5.7 5.7l-10 10a2 2 0 0 1-2.9-2.9l9.3-9.3"/></svg>
+        <input id="floatingAiImage" type="file" accept="image/*" hidden>
+      </label>
+      <textarea id="floatingAiInput" rows="1" placeholder="اكتب سؤالك أو اطلب وجبة يومية..."></textarea>
+      <button class="floating-send" id="floatingAiSend" type="button" aria-label="إرسال">➤</button>
+    </div>
+  </section>
+</div>
+
 <nav class="bottom-nav" aria-label="التنقل الرئيسي">
   <button type="button" class="bottom-item active" data-page="page-home">
     <svg viewBox="0 0 24 24"><path d="M3 11 12 3l9 8v10h-6v-6H9v6H3Z"/></svg><span id="navHome">Home</span>
   </button>
   <button type="button" class="bottom-item" data-page="page-plan">
     <svg viewBox="0 0 24 24"><path d="M4 4h16v16H4Z"/><path d="M8 8h8M8 12h8M8 16h5"/></svg><span id="navPlan">Plan</span>
-  </button>
-  <button type="button" class="bottom-item" data-page="page-chat">
-    <svg viewBox="0 0 24 24"><path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4Z"/></svg><span id="navChat">Chat</span>
-  </button>
-  <button type="button" class="bottom-item" data-page="page-analyzer">
-    <svg viewBox="0 0 24 24"><path d="M4 7h4l2-3h4l2 3h4v13H4Z"/><circle cx="12" cy="13" r="4"/></svg><span id="navAnalyze">Analyze</span>
   </button>
   <button type="button" class="bottom-item" data-page="page-progress">
     <svg viewBox="0 0 24 24"><path d="M4 19V9M10 19V5M16 19v-8M22 19V3"/></svg><span id="navProgress">Progress</span>

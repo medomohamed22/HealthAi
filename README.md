@@ -102,3 +102,7 @@ http://localhost:3000
 - PWA قابلة للتثبيت مع Offline App Shell
 
 جميع بيانات المستخدم في هذه المميزات محفوظة في `localStorage` داخل الجهاز. لا يوجد تسجيل دخول أو قاعدة بيانات.
+
+
+## Meals database (no AI)
+Set `SPOONACULAR_API_KEY` in Vercel. Weekly plans and meal replacement use Spoonacular directly. Gemini is used only by the floating assistant for nutrition explanations, one-day meal requests, and image analysis.

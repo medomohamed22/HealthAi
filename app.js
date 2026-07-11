@@ -48,7 +48,7 @@ Your information:${JSON.stringify(u)}
 
 async function apiRequest(url, options={}){
   const controller=new AbortController();
-  const timeoutMs=url.includes("/api/gemini")?50000:15000;
+  const timeoutMs=url.includes("/api/gemini")?50000:url.includes("/api/meals")?25000:15000;
   const timer=setTimeout(()=>controller.abort(),timeoutMs);
 
   try{
@@ -166,6 +166,7 @@ async function searchMealImage(keyword,meal,index){
 }
 
 async function hydrateMealImage(imgId,creditId,loaderId,meal,index){
+  if(meal?.image){const img=document.getElementById(imgId),loader=document.getElementById(loaderId),credit=document.getElementById(creditId);if(img){img.src=meal.image;img.classList.remove("loading-image")}if(loader)loader.remove();if(credit&&meal.sourceUrl){credit.href=meal.sourceUrl;credit.textContent=currentLanguage==="ar"?"مصدر الوصفة":"Recipe source";credit.hidden=false}return;}
   const img=document.getElementById(imgId);
   const credit=document.getElementById(creditId);
   const loader=document.getElementById(loaderId);
@@ -272,7 +273,7 @@ function renderDay(){
 
    return `<article class="card meal">
      <div class="meal-media">
-       <img id="${imageId}" class="meal-img loading-image" src="${FALLBACK_MEAL_IMAGE}" alt="${safe(m.name)}" loading="lazy">
+       <img id="${imageId}" class="meal-img loading-image" src="${safe(m.image||FALLBACK_MEAL_IMAGE)}" alt="${safe(m.name)}" loading="lazy">
        <div id="${loaderId}" class="image-loader">${t.loadingImage}</div>
        <a id="${creditId}" class="image-credit" href="#" target="_blank" rel="noopener noreferrer" hidden>${t.imageSource}</a>
      </div>
@@ -286,6 +287,7 @@ function renderDay(){
            <svg viewBox="0 0 24 24"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8Z"/></svg>
          </button>
        </div>
+       ${m.description?`<p class="meal-description">${safe(m.description)}</p>`:""}
        <p><b>${t.ingredients}:</b> ${safe(m.ingredients)}</p>
        <details class="recipe">
          <summary>${t.showRecipe}</summary>
@@ -295,7 +297,7 @@ function renderDay(){
        </details>
        <div class="meal-actions">
          <button class="small-btn" onclick="openReplace(${currentDay},${i})">${t.replace}</button>
-         <button class="small-btn" onclick="askAboutMeal(${currentDay},${i})">${t.askMeal}</button>
+
        </div>
      </div>
    </article>`;
@@ -307,7 +309,7 @@ function renderDay(){
 
 function openReplace(day,meal){replaceTarget={day,meal};$("#replaceMealName").textContent=currentPlan.days[day].meals[meal].name;$("#replaceModal").classList.add("open")}
 $("#closeModal").onclick=()=>$("#replaceModal").classList.remove("open");
-$("#confirmReplace").onclick=async()=>{try{const old=currentPlan.days[replaceTarget.day].meals[replaceTarget.meal],u=collectData(),type=$("#replaceType").value;$("#confirmReplace").textContent="جارٍ الاستبدال...";const prompt=`اقترح وجبة بديلة عربية ${type}. Your information:${JSON.stringify(u)}. الوجبة الحالية:${JSON.stringify(old)}. احترم الحساسية. أعد JSON فقط بنفس مفاتيح الوجبة الحالية: name,ingredients,calories,protein,carbs,fats,alternative,prepTime,difficulty,instructions,imageKeyword.`;const meal=await geminiText(prompt);currentPlan.days[replaceTarget.day].meals[replaceTarget.meal]=meal;renderPlan(currentPlan);$("#replaceModal").classList.remove("open")}catch(e){showError(e)}finally{$("#confirmReplace").textContent="Create replacement"}};
+$("#confirmReplace").onclick=async()=>{try{const old=currentPlan.days[replaceTarget.day].meals[replaceTarget.meal],u=collectData();$("#confirmReplace").textContent=currentLanguage==="ar"?"جارٍ جلب بديل...":"Loading replacement...";const data=await apiRequest("/api/meals",{method:"POST",body:JSON.stringify({mode:"replace",user:u,calories:old.calories,excludeId:old.id,query:""})});currentPlan.days[replaceTarget.day].meals[replaceTarget.meal]=data.meal;renderPlan(currentPlan);$("#replaceModal").classList.remove("open")}catch(e){showError(e)}finally{$("#confirmReplace").textContent=currentLanguage==="ar"?"إنشاء بديل":"Create replacement"}};
 
 
 function formatChatAnswer(text){
@@ -449,7 +451,7 @@ function setLoading(v){
   }
 }
 function showError(e){clearInterval(planLoadingTimer);planLoadingTimer=null;$("#loading").style.display="none";$("#errorBox").textContent=e?.message||"حدث خطأ";$("#errorBox").style.display="block";$("#errorBox").scrollIntoView({behavior:"smooth"})}
-$("#nutritionForm").addEventListener("submit",async e=>{e.preventDefault();setLoading(true);try{const u=collectData(),c=calculateNutrition(u),warnings=healthWarnings(u,c),raw=await geminiText(weeklyPrompt(u,c));const p=validatePlan(raw,u,c);if(warnings.length)p.medicalWarning=warnings.join(" ");renderPlan(p)}catch(e){showError(e)}});
+$("#nutritionForm").addEventListener("submit",async e=>{e.preventDefault();setLoading(true);try{const u=collectData(),c=calculateNutrition(u),warnings=healthWarnings(u,c);const data=await apiRequest("/api/meals",{method:"POST",body:JSON.stringify({mode:"plan",user:u,calc:c,language:currentLanguage})});const p=validatePlan(data.plan,u,c);if(warnings.length)p.medicalWarning=warnings.join(" ");renderPlan(p)}catch(e){showError(e)}});
 
 
 
@@ -1372,3 +1374,54 @@ function initSmartTools(){
 })();
 
 window.addEventListener("storage",()=>{try{renderDailyTools();renderWeeklyMetrics()}catch{}});
+
+
+// Floating AI assistant: the only visible AI feature.
+let floatingAiImageData=null;
+function floatingAddMessage(text,type="ai"){
+  const box=$("#floatingAiMessages");
+  if(!box)return;
+  const item=document.createElement("div");
+  item.className=`floating-msg ${type}`;
+  item.textContent=text;
+  box.appendChild(item);
+  box.scrollTop=box.scrollHeight;
+  return item;
+}
+function toggleFloatingAi(open){
+  const panel=$("#floatingAiPanel"),button=$("#floatingAiButton");
+  if(!panel||!button)return;
+  panel.hidden=!open;button.setAttribute("aria-expanded",String(open));
+  if(open)setTimeout(()=>$("#floatingAiInput")?.focus(),50);
+}
+$("#floatingAiButton")?.addEventListener("click",()=>toggleFloatingAi($("#floatingAiPanel").hidden));
+$("#floatingAiClose")?.addEventListener("click",()=>toggleFloatingAi(false));
+$("#floatingRemoveImage")?.addEventListener("click",()=>{floatingAiImageData=null;$("#floatingImagePreview").hidden=true;$("#floatingAiImage").value=""});
+$("#floatingAiImage")?.addEventListener("change",async e=>{
+  const file=e.target.files?.[0];if(!file)return;
+  try{floatingAiImageData=await fileToCompressedBase64(file,1280,.8);$("#floatingImageThumb").src=floatingAiImageData.previewUrl;$("#floatingImagePreview").hidden=false}catch(err){floatingAddMessage(err.message,"ai")}
+});
+async function sendFloatingAi(){
+  const input=$("#floatingAiInput"),send=$("#floatingAiSend");
+  const question=(input?.value||"").trim();
+  if(!question&&!floatingAiImageData)return;
+  floatingAddMessage(question||(currentLanguage==="ar"?"حلل هذه الصورة":"Analyze this image"),"user");
+  if(input)input.value="";if(send)send.disabled=true;
+  const loading=floatingAddMessage(currentLanguage==="ar"?"جاري التحليل...":"Working...","ai");
+  try{
+    const profile=collectData();
+    const language=currentLanguage==="ar"?"العربية":"English";
+    const rules=`أنت مساعد HealthAi. أجب باللغة ${language}. مسموح لك فقط: شرح محتوى غذائي، تحليل صورة طعام بشكل تقديري، أو إعداد اقتراح وجبات ليوم واحد. استخدم بيانات المستخدم الشخصية المرفقة فقط كسياق، ولا تعتمد على خطة الموقع أو السجل. لا تشخص مرضًا ولا تغير دواء. بيانات المستخدم: ${JSON.stringify(profile)}. طلب المستخدم: ${question||"حلل الصورة"}`;
+    let answer;
+    if(floatingAiImageData){
+      const result=await geminiVision(`${rules}\nأعد شرحًا واضحًا مع تقدير السعرات والبروتين والكربوهيدرات والدهون، واذكر أن النتيجة تقديرية من الصورة.`,floatingAiImageData);
+      answer=typeof result==="string"?result:JSON.stringify(result,null,2);
+    }else{
+      answer=await geminiText(`${rules}\nإذا طلب وجبة يومية، أعطِ يومًا واحدًا فقط مع الوجبات والكميات والسعرات التقريبية. استخدم عناوين قصيرة ونقاط بدون جداول.`,false);
+    }
+    loading.textContent=answer;
+    floatingAiImageData=null;$("#floatingImagePreview").hidden=true;$("#floatingAiImage").value="";
+  }catch(err){loading.textContent=err.message||"حدث خطأ"}finally{if(send)send.disabled=false}
+}
+$("#floatingAiSend")?.addEventListener("click",sendFloatingAi);
+$("#floatingAiInput")?.addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();sendFloatingAi()}});

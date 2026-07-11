@@ -5,6 +5,9 @@
     },
     "api/images.js": {
       "maxDuration": 20
+    },
+    "api/meals.js": {
+      "maxDuration": 30
     }
   },
   "headers": [
