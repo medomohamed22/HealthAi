@@ -1,4 +1,5 @@
 const GEMINI_API_BASE = "https://generativelanguage.googleapis.com/v1beta";
+const GEMINI_MODEL = "gemini-3.5-flash";
 
 export function applyCommonHeaders(res) {
   res.setHeader("Cache-Control", "no-store");
@@ -26,115 +27,93 @@ export function getBody(req) {
   return req.body || null;
 }
 
-function unique(values) {
-  return [...new Set(values.filter(Boolean))];
-}
-
-export async function getGeminiModels(apiKey) {
-  const preferred = unique([
-    process.env.GEMINI_MODEL,
-    "gemini-2.5-flash",
-    "gemini-2.5-flash-lite",
-    "gemini-flash-latest"
-  ]);
+async function fetchWithTimeout(url, options, timeoutMs) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
 
   try {
-    const response = await fetch(`${GEMINI_API_BASE}/models?pageSize=100`, {
-      headers: { "x-goog-api-key": apiKey }
-    });
-
-    if (!response.ok) return preferred;
-
-    const data = await response.json();
-    const available = (data.models || [])
-      .filter((model) =>
-        Array.isArray(model.supportedGenerationMethods) &&
-        model.supportedGenerationMethods.includes("generateContent")
-      )
-      .map((model) => String(model.name || "").replace(/^models\//, ""))
-      .filter((name) =>
-        /gemini/i.test(name) &&
-        !/image-generation|embedding|tts|audio|live/i.test(name)
-      );
-
-    return unique([
-      ...preferred.filter((model) => available.includes(model)),
-      ...available,
-      ...preferred
-    ]);
-  } catch {
-    return preferred;
+    return await fetch(url, { ...options, signal: controller.signal });
+  } finally {
+    clearTimeout(timer);
   }
 }
 
 export async function callGemini({ apiKey, prompt, image, json, maxOutputTokens }) {
-  const models = await getGeminiModels(apiKey);
-  let lastError = "Gemini request failed.";
+  const parts = [{ text: prompt }];
 
-  for (const model of models) {
-    try {
-      const parts = [{ text: prompt }];
-
-      if (image?.base64 && image?.mimeType) {
-        parts.push({
-          inlineData: {
-            mimeType: image.mimeType,
-            data: image.base64
-          }
-        });
+  if (image?.base64 && image?.mimeType) {
+    parts.push({
+      inlineData: {
+        mimeType: image.mimeType,
+        data: image.base64
       }
-
-      const generationConfig = {
-        temperature: image ? 0.2 : 0.35,
-        maxOutputTokens: maxOutputTokens || (image ? 5000 : 20000)
-      };
-
-      if (json) generationConfig.responseMimeType = "application/json";
-
-      const response = await fetch(
-        `${GEMINI_API_BASE}/models/${encodeURIComponent(model)}:generateContent`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "x-goog-api-key": apiKey
-          },
-          body: JSON.stringify({
-            contents: [{ role: "user", parts }],
-            generationConfig
-          })
-        }
-      );
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        lastError = data?.error?.message || `Model ${model} failed.`;
-        continue;
-      }
-
-      const output = data?.candidates?.[0]?.content?.parts
-        ?.map((part) => part.text || "")
-        .join("")
-        .trim();
-
-      if (!output) {
-        lastError = `Model ${model} returned an empty response.`;
-        continue;
-      }
-
-      if (!json) return output;
-
-      const clean = output
-        .replace(/^```json\s*/i, "")
-        .replace(/```\s*$/i, "")
-        .trim();
-
-      return JSON.parse(clean);
-    } catch (error) {
-      lastError = error?.message || String(error);
-    }
+    });
   }
 
-  throw new Error(lastError);
+  // Gemini 3.5 Flash: use the model directly with no fallback models.
+  // "low" keeps good reasoning quality while reducing latency on Vercel.
+  const generationConfig = {
+    maxOutputTokens: Math.min(
+      maxOutputTokens || (image ? 4096 : 8192),
+      image ? 4096 : 8192
+    ),
+    thinkingConfig: { thinkingLevel: "low" }
+  };
+
+  if (json) generationConfig.responseMimeType = "application/json";
+
+  let response;
+  try {
+    response = await fetchWithTimeout(
+      `${GEMINI_API_BASE}/models/${GEMINI_MODEL}:generateContent`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-goog-api-key": apiKey
+        },
+        body: JSON.stringify({
+          contents: [{ role: "user", parts }],
+          generationConfig
+        })
+      },
+      45_000
+    );
+  } catch (error) {
+    if (error?.name === "AbortError") {
+      throw new Error("Gemini 3.5 Flash took too long to respond. Please try again.");
+    }
+    throw error;
+  }
+
+  const data = await response.json().catch(() => ({}));
+
+  if (!response.ok) {
+    throw new Error(
+      data?.error?.message ||
+        `Gemini 3.5 Flash request failed with status ${response.status}.`
+    );
+  }
+
+  const output = data?.candidates?.[0]?.content?.parts
+    ?.map((part) => part.text || "")
+    .join("")
+    .trim();
+
+  if (!output) {
+    throw new Error("Gemini 3.5 Flash returned an empty response.");
+  }
+
+  if (!json) return output;
+
+  const clean = output
+    .replace(/^```json\s*/i, "")
+    .replace(/```\s*$/i, "")
+    .trim();
+
+  try {
+    return JSON.parse(clean);
+  } catch {
+    throw new Error("Gemini 3.5 Flash returned invalid JSON. Please try again.");
+  }
 }

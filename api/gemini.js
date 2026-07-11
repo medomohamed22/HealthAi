@@ -69,7 +69,7 @@ export default async function handler(req, res) {
       prompt,
       image,
       json: body.json !== false,
-      maxOutputTokens: mode === "vision" ? 5000 : 20000
+      maxOutputTokens: mode === "vision" ? 4096 : 8192
     });
 
     return res.status(200).json({ result });
