@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0b6b4b">
+<title>HealthAi — Smart Nutrition</title>
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+
+<header class="app-header">
+  <div class="container nav">
+    <div class="brand">
+      <div class="logo" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 22c4.5-2.2 7-5.7 7-10V5l-7-3-7 3v7c0 4.3 2.5 7.8 7 10Z"/>
+          <path d="M9 12h6M12 9v6"/>
+        </svg>
+      </div>
+      <div>
+        <strong>HealthAi</strong>
+        <small id="brandSubtitle">Your smart health assistant</small>
+      </div>
+    </div>
+
+    <div class="nav-actions">
+      <button class="lang-btn" id="languageBtn" type="button" aria-label="Switch language">
+        <span id="languageLabel">AR</span>
+      </button>
+
+      <button class="menu-btn" id="menuBtn" type="button" aria-label="Open meal diary">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+
+
+<div id="drawerBackdrop" class="drawer-backdrop" hidden></div>
+<aside id="mealDrawer" class="meal-drawer" aria-hidden="true">
+  <div class="drawer-head">
+    <div>
+      <small id="drawerEyebrow">Personal diary</small>
+      <h2 id="drawerTitle">Meal calendar</h2>
+    </div>
+    <button id="closeDrawerBtn" class="drawer-close" type="button" aria-label="Close">×</button>
+  </div>
+
+  <div class="drawer-body">
+    <div class="calendar-picker">
+      <div class="field">
+        <label id="mealDateLabel">Date</label>
+        <input id="mealDiaryDate" type="date">
+      </div>
+      <div class="field">
+        <label id="mealTypeLabel">Meal type</label>
+        <select id="mealDiaryType">
+          <option value="Breakfast">Breakfast</option>
+          <option value="Lunch">Lunch</option>
+          <option value="Dinner">Dinner</option>
+          <option value="Snack">Snack</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="field">
+      <label id="mealNameLabel">Meal</label>
+      <input id="mealDiaryName" placeholder="e.g. grilled chicken and rice">
+    </div>
+
+    <div class="grid2">
+      <div class="field">
+        <label id="mealCaloriesLabel">Calories</label>
+        <input id="mealDiaryCalories" type="number" min="0" placeholder="0">
+      </div>
+      <div class="field">
+        <label id="mealProteinLabel">Protein (g)</label>
+        <input id="mealDiaryProtein" type="number" min="0" placeholder="0">
+      </div>
+    </div>
+
+    <button id="saveMealDiaryBtn" class="btn primary drawer-save" type="button">Save meal</button>
+
+    <div class="diary-filter">
+      <button id="prevDiaryDay" type="button" aria-label="Previous day">‹</button>
+      <strong id="selectedDiaryDate"></strong>
+      <button id="nextDiaryDay" type="button" aria-label="Next day">›</button>
+    </div>
+
+    <div id="mealDiaryList" class="meal-diary-list"></div>
+  </div>
+</aside>
+
+<main>
+<section id="page-home" class="app-page active">
+  <section class="hero">
+    <div class="container">
+      <div class="mobile-hero">
+        <div>
+          <span class="eyebrow" id="homeHeroEyebrow">Daily and weekly nutrition</span>
+          <h1 id="homeHeroTitle">Smarter nutrition, <span>clearer results</span></h1>
+          <p id="homeHeroText">Create your plan, track progress and manage meals in one place.</p>
+        </div>
+        <div class="hero-ring"><span>AI</span></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="container home-content">
+    <div class="home-welcome card">
+      <div>
+        <span class="eyebrow dark-text">HealthAi</span>
+        <h2 id="homeWelcomeTitle">All your health tools in one place</h2>
+        <p id="homeWelcomeText">Build a nutrition plan, chat with the assistant, analyze a meal photo or track your measurements.</p>
+      </div>
+      <div class="home-orb">
+        <svg viewBox="0 0 24 24">
+          <path d="M12 22c4.5-2.2 7-5.7 7-10V5l-7-3-7 3v7c0 4.3 2.5 7.8 7 10Z"/>
+          <path d="M9 12h6M12 9v6"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="home-grid">
+      <button class="home-feature" type="button" data-page-target="page-plan">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24"><path d="M4 4h16v16H4Z"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>
+        </div>
+        <strong id="homePlanTitle">Nutrition Plan</strong>
+        <span id="homePlanText">Create a complete weekly plan</span>
+      </button>
+
+      <button class="home-feature" type="button" data-page-target="page-chat">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24"><path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4Z"/></svg>
+        </div>
+        <strong id="homeChatTitle">Chat</strong>
+        <span id="homeChatText">Ask about meals and nutrition</span>
+      </button>
+
+      <button class="home-feature" type="button" data-page-target="page-analyzer">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24"><path d="M4 7h4l2-3h4l2 3h4v13H4Z"/><circle cx="12" cy="13" r="4"/></svg>
+        </div>
+        <strong id="homeAnalyzeTitle">Photo Analysis</strong>
+        <span id="homeAnalyzeText">Estimate ingredients and calories</span>
+      </button>
+
+      <button class="home-feature" type="button" data-page-target="page-progress">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24"><path d="M4 19V9M10 19V5M16 19v-8M22 19V3"/></svg>
+        </div>
+        <strong id="homeProgressTitle">Progress</strong>
+        <span id="homeProgressText">Track weight and measurements</span>
+      </button>
+    </div>
+
+    <div class="home-mini-dashboard">
+      <div class="dash-card">
+        <div>
+          <small data-i18n="dailyScore">Daily score</small>
+          <strong id="homeCommitment">0%</strong>
+        </div>
+        <div class="progress-ring home-ring">
+          <span id="homeRingValue">0</span>
+        </div>
+      </div>
+
+      <div class="dash-card water-card">
+        <div>
+          <small data-i18n="water">Water</small>
+          <strong><span id="homeWaterCount">0</span> / 8</strong>
+        </div>
+        <button type="button" id="homeAddWaterBtn" class="round-action">+</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="page-plan" class="app-page">
+<div class="container page-titlebar">
+  <div><small>HealthAi</small><h2 id="planPageTitle">Nutrition Plan</h2></div>
+  <span class="badge" id="planDaysBadge">7 days</span>
+</div>
+<section class="container layout">
+<form id="nutritionForm" class="card form-card">
+<div class="section-title"><h2 id="formTitle">Your information</h2><span class="badge" id="autoSavedBadge">Auto-saved</span></div>
+<div class="grid2"><div class="field"><label id="labelName">Name</label><input id="name" value="Alex" required></div><div class="field"><label id="labelGender">Gender</label><select id="gender"><option value="ذكر">Male</option><option value="أنثى">Female</option></select></div></div>
+<div class="grid2"><div class="field"><label id="labelAge">Age</label><input id="age" type="number" min="15" max="90" value="26" required></div><div class="field"><label id="labelHeight">Height (cm)</label><input id="height" type="number" min="120" max="230" value="175" required></div></div>
+<div class="grid2"><div class="field"><label id="labelWeight">Weight (kg)</label><input id="weight" type="number" min="35" max="300" step=".1" value="84" required></div><div class="field"><label id="labelTargetWeight">Target weight</label><input id="goalWeight" type="number" min="35" max="300" step=".1" value="74"></div></div>
+<div class="field"><label id="labelGoal">Goal</label><select id="goal"><option value="خسارة الدهون">Fat loss</option><option value="بناء العضلات">Muscle gain</option><option value="تثبيت الوزن">Maintain weight</option><option value="زيادة الوزن">Weight gain</option></select></div>
+<div class="field"><label id="labelActivity">Activity</label><select id="activity"><option value="1.2">Low activity</option><option value="1.375">Light — 1 to 3 days</option><option value="1.55" selected>Moderate — 3 to 5 days</option><option value="1.725">High — 6 days</option></select></div>
+<div class="grid2"><div class="field"><label id="labelMeals">Meals per day</label><select id="meals"><option>3</option><option selected>4</option><option>5</option></select></div><div class="field"><label id="labelBudget">Budget</label><select id="budget"><option value="اقتصادية">Budget</option><option value="متوسطة" selected>Standard</option><option value="مرنة">Flexible</option></select></div></div>
+<div class="field"><label id="labelDiet">Diet style</label><div class="chips"><label class="chip"><input type="radio" name="diet" value="عادي" checked><span data-diet-label="عادي">Balanced</span></label><label class="chip"><input type="radio" name="diet" value="نباتي"><span data-diet-label="نباتي">Vegetarian</span></label><label class="chip"><input type="radio" name="diet" value="كيتو"><span data-diet-label="كيتو">Keto</span></label><label class="chip"><input type="radio" name="diet" value="صيام متقطع"><span data-diet-label="صيام متقطع">Intermittent fasting</span></label></div></div>
+<div class="field"><label id="labelLikes">Favorite foods</label><textarea id="likes">chicken, rice, eggs, oats, yogurt</textarea></div>
+<div class="field"><label id="labelAvoid">Allergies or excluded foods</label><textarea id="avoid">I do not eat fish</textarea></div>
+<div class="field"><label id="labelMedical">Health notes</label><textarea id="medical">None</textarea></div>
+<div id="localCalc" class="calc-box"><div><b id="calcBmi">—</b><span>BMI</span></div><div><b id="calcTdee">—</b><span>TDEE</span></div><div><b id="calcTarget">—</b><span data-i18n="targetCalories">Target calories</span></div></div>
+
+<div class="actions"><button class="btn primary" id="createPlanBtn" type="submit">Create 7-day plan</button></div>
+</form>
+
+<div>
+<div id="errorBox" class="error"></div>
+<div id="empty" class="card empty"><div><div style="font-size:3rem">🍽️</div><h2 id="emptyTitle">Your plan will appear here</h2><p id="emptyText">Complete your information, then create a personalized seven-day nutrition plan.</p></div></div>
+<div id="loading" class="card loading">
+      <div class="loader-orbit"><div class="spinner"></div><span id="loadingSeconds">0s</span></div>
+      <h3 id="loadingTitle">Creating your weekly plan</h3>
+      <p id="loadingText" style="color:var(--muted)">Preparing meals, nutrition targets and recipes.</p>
+      <div class="loading-steps">
+        <span class="active" id="loadStep1">Calculating targets</span>
+        <span id="loadStep2">Building meals</span>
+        <span id="loadStep3">Finalizing plan</span>
+      </div>
+    </div>
+
+<div id="results">
+<div class="mobile-dashboard">
+  <div class="dash-card">
+    <div>
+      <small data-i18n="dailyScore">Daily score</small>
+      <strong id="dailyCommitment">0%</strong>
+    </div>
+    <div class="progress-ring"><span id="ringValue">0</span></div>
+  </div>
+  <div class="dash-card water-card">
+    <div>
+      <small data-i18n="water">Water</small>
+      <strong><span id="waterCount">0</span> / 8</strong>
+    </div>
+    <button type="button" id="addWaterBtn" class="round-action" aria-label="Add entry كوب ماء">+</button>
+  </div>
+</div>
+
+<div class="card summary"><h2 id="planTitle"></h2><p id="summaryText"></p></div>
+<div class="metrics"><div class="card metric"><b id="mBmi">—</b><span>BMI</span></div><div class="card metric"><b id="mBmr">—</b><span>BMR</span></div><div class="card metric"><b id="mTdee">—</b><span>TDEE</span></div><div class="card metric"><b id="mCalories">—</b><span data-i18n="targetCalories">Target calories</span></div><div class="card metric"><b id="mProtein">—</b><span data-i18n="protein">Protein</span></div><div class="card metric"><b id="mWater">—</b><span data-i18n="estimatedWater">Estimated water</span></div></div>
+<div id="medicalWarning" class="warning"></div>
+<div id="dayTabs" class="tabs"></div>
+<div class="card day-head"><h3 id="dayTitle"></h3><span class="badge" id="dayCalories"></span></div>
+<div id="mealGrid" class="meal-grid"></div>
+
+<div class="card panel tips-panel"><h3 id="tipsTitle">Plan tips</h3><ul id="tips" class="tips"></ul></div>
+
+
+</div></section></section>
+<section id="page-analyzer" class="app-page">
+  <div class="container page-titlebar">
+    <div><small>HealthAi</small><h2 id="analyzerPageTitle">Meal Photo Analysis</h2></div>
+    <span class="badge">AI Vision</span>
+  </div>
+  <div class="container page-shell">
+<div class="card food-analyzer" id="foodAnalyzer">
+  <div class="section-title">
+    <div>
+      <h3 id="analyzerCardTitle">Meal Photo Analysis</h3>
+      <p class="section-subtitle" id="analyzerSubtitle">Upload a photo or use the camera to estimate ingredients and nutrition.</p>
+    </div>
+    <span class="badge">Gemini Vision</span>
+  </div>
+
+  <div class="image-action-grid">
+    <label class="image-action-btn" for="galleryInput">
+      <svg viewBox="0 0 24 24"><path d="M4 5h16v14H4Z"/><path d="m4 16 5-5 4 4 2-2 5 5"/><circle cx="16" cy="9" r="1.5"/></svg>
+      <span id="chooseDeviceText">Choose from device</span>
+      <input id="galleryInput" type="file" accept="image/*" hidden>
+    </label>
+
+    <label class="image-action-btn" for="cameraInput">
+      <svg viewBox="0 0 24 24"><path d="M4 7h4l2-3h4l2 3h4v13H4Z"/><circle cx="12" cy="13" r="4"/></svg>
+      <span id="openCameraText">Open camera</span>
+      <input id="cameraInput" type="file" accept="image/*" capture="environment" hidden>
+    </label>
+  </div>
+
+  <div id="foodPreviewWrap" class="food-preview-wrap" hidden>
+    <img id="foodPreview" alt="Meal preview">
+    <button id="removeFoodImage" class="remove-image-btn" type="button" aria-label="Remove image">×</button>
+  </div>
+
+  <button id="analyzeFoodBtn" class="btn primary analyze-food-btn" type="button" disabled>
+    <span id="analyzeFoodBtnText">Analyze meal</span>
+  </button>
+
+  <div id="foodAnalyzeLoading" class="food-analysis-loading" hidden aria-hidden="true">
+    <div class="mini-spinner"></div>
+    <span id="foodAnalyzingText">Analyzing meal...</span>
+  </div>
+
+  <div id="foodAnalysisResult" class="food-analysis-result" hidden></div>
+</div>
+
+</div></section>
+<section id="page-chat" class="app-page">
+  <div class="container page-titlebar">
+    <div><small>HealthAi</small><h2 id="chatPageTitle">Chat</h2></div>
+    <span class="badge" id="chatBadge">Smart assistant</span>
+  </div>
+  <div class="container page-shell">
+<div class="card chat"><div class="section-title"><h3 id="chatTitle">Ask HealthAi</h3><span class="badge" id="chatContextBadge">Uses your current plan</span></div><div id="chatMessages" class="chat-messages"></div><div class="chat-input"><input id="chatQuestion" placeholder="Example: I ate dessert. How should I adjust the rest of my day?"><button class="btn primary" id="chatSend" type="button">Send</button></div></div>
+
+</div></section>
+<section id="page-progress" class="app-page">
+  <div class="container page-titlebar">
+    <div><small>HealthAi</small><h2 id="progressPageTitle">Progress</h2></div>
+    <span class="badge" id="progressPageBadge">Your measurements</span>
+  </div>
+  <div class="container page-shell">
+<div class="card progress"><div class="section-title"><h3 id="progressTitle">Weight and measurements</h3><span class="badge" id="progressSummary">No data yet</span></div><div class="progress-form"><div><label id="labelProgressDate">Date</label><input id="progressDate" type="date"></div><div><label id="labelProgressWeight">Weight</label><input id="progressWeight" type="number" step=".1"></div><div><label id="labelProgressWaist">Waist</label><input id="progressWaist" type="number" step=".1"></div><div><label id="labelProgressNote">Note</label><input id="progressNote"></div><button class="btn primary" id="addProgress" type="button">Add entry</button></div><div id="chart" class="chart"></div><div id="progressList" class="progress-list"></div></div>
+</div></div></section>
+</main>
+
+<div id="replaceModal" class="modal"><div class="modal-card"><h3 id="replaceModalTitle">Replace meal</h3><p id="replaceMealName"></p><div class="field"><label id="replaceTypeLabel">Replacement type</label><select id="replaceType"><option>بنفس السعرات والبروتين تقريبًا</option><option>أرخص</option><option>أسرع في التحضير</option><option>بدون طبخ</option><option>بروتين أعلى</option><option>كربوهيدرات أقل</option></select></div><div class="actions"><button class="btn primary" id="confirmReplace" type="button">Create replacement</button><button class="btn soft" id="closeModal" type="button">Cancel</button></div></div></div>
+
+
+<nav class="bottom-nav" aria-label="التنقل الرئيسي">
+  <button type="button" class="bottom-item active" data-page="page-home">
+    <svg viewBox="0 0 24 24"><path d="M3 11 12 3l9 8v10h-6v-6H9v6H3Z"/></svg><span id="navHome">Home</span>
+  </button>
+  <button type="button" class="bottom-item" data-page="page-plan">
+    <svg viewBox="0 0 24 24"><path d="M4 4h16v16H4Z"/><path d="M8 8h8M8 12h8M8 16h5"/></svg><span id="navPlan">Plan</span>
+  </button>
+  <button type="button" class="bottom-item" data-page="page-chat">
+    <svg viewBox="0 0 24 24"><path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4Z"/></svg><span id="navChat">Chat</span>
+  </button>
+  <button type="button" class="bottom-item" data-page="page-analyzer">
+    <svg viewBox="0 0 24 24"><path d="M4 7h4l2-3h4l2 3h4v13H4Z"/><circle cx="12" cy="13" r="4"/></svg><span id="navAnalyze">Analyze</span>
+  </button>
+  <button type="button" class="bottom-item" data-page="page-progress">
+    <svg viewBox="0 0 24 24"><path d="M4 19V9M10 19V5M16 19v-8M22 19V3"/></svg><span id="navProgress">Progress</span>
+  </button>
+</nav>
+
+<script src="/app.js" defer></script>
+
+
+
+
+</body>
+</html>
