@@ -1,18 +1,10 @@
 {
-  "name": "pi-testnet-batch-sender",
-  "version": "2.0.0",
+  "name": "pi-token-control-center",
+  "version": "3.0.0",
   "private": true,
   "type": "module",
-  "scripts": {
-    "dev": "vercel dev"
-  },
-  "dependencies": {
-    "@stellar/stellar-sdk": "^13.3.0"
-  },
-  "devDependencies": {
-    "vercel": "^44.7.3"
-  },
-  "engines": {
-    "node": ">=20"
-  }
+  "scripts": {"dev": "vercel dev"},
+  "dependencies": {"@stellar/stellar-sdk": "^13.3.0"},
+  "devDependencies": {"vercel": "^44.7.3"},
+  "engines": {"node": ">=20"}
 }
