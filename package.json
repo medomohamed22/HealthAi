@@ -1,0 +1,15 @@
+{
+  "name": "pi-token-control-center",
+  "version": "3.2.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vercel dev"
+  },
+  "dependencies": {
+    "@stellar/stellar-sdk": "^13.3.0"
+  },
+  "engines": {
+    "node": "20.x"
+  }
+}
