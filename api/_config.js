@@ -34,6 +34,11 @@ export function getDistributor() {
   if (!process.env.TOKEN_DISTRIBUTOR_SECRET) throw new Error('TOKEN_DISTRIBUTOR_SECRET غير مضبوط.');
   return Keypair.fromSecret(process.env.TOKEN_DISTRIBUTOR_SECRET);
 }
+export function getAdminReceiverAddress() {
+  const configured = String(process.env.ADMIN_RECEIVER_ADDRESS || '').trim();
+  if (configured) return configured;
+  return getDistributor().publicKey();
+}
 export function getAsset() {
   if (!TOKEN_CODE || !/^[A-Z0-9]{1,12}$/.test(TOKEN_CODE)) throw new Error('TOKEN_CODE غير صالح.');
   return new Asset(TOKEN_CODE, getIssuer().publicKey());

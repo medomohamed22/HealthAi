@@ -7,7 +7,7 @@ export default async function handler(req, res) {
   try {
     const amount = validAmount(req.body?.amount); const asset = getAsset(); const distributor = getDistributor();
     const recipients = [...new Set((req.body?.recipients || []).map(x => String(x).trim()))];
-    if (!recipients.length || recipients.length > 50) throw new Error('اختر من 1 إلى 50 عنوانًا.');
+    if (!recipients.length || recipients.length > 10) throw new Error('اختر من 1 إلى 10 محافظ فقط.');
     for (const address of recipients) if (!StrKey.isValidEd25519PublicKey(address)) throw new Error(`عنوان غير صالح: ${address}`);
     const checks = await Promise.all(recipients.map(async address => {
       const a = await server.loadAccount(address); const line = a.balances.find(b => b.asset_code === asset.code && b.asset_issuer === asset.issuer);

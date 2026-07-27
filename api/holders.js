@@ -7,12 +7,12 @@ export default async function handler(req, res) {
   if (!requireAdmin(req, res)) return;
   try {
     const asset = getAsset();
-    const maxPages = Math.min(Math.max(Number(req.query?.pages || 5), 1), 50);
     let url = `/accounts?asset=${encodeURIComponent(`${asset.code}:${asset.issuer}`)}&order=asc&limit=200`;
     const holders = []; let pages = 0;
-    while (url && pages < maxPages) {
-      const page = await horizonJson(url); pages++;
-      for (const account of page?._embedded?.records || []) {
+    while (url) {
+      const page = await horizonJson(url, 30000); pages++;
+      const records = page?._embedded?.records || [];
+      for (const account of records) {
         if (account.account_id === asset.issuer) continue;
         const line = findTrustline(account, asset);
         if (!line) continue;
@@ -30,7 +30,6 @@ export default async function handler(req, res) {
         });
       }
       const next = page?._links?.next?.href;
-      const records = page?._embedded?.records || [];
       url = records.length === 200 && next ? next : null;
     }
     holders.sort(compareDecimalDesc);
@@ -38,8 +37,8 @@ export default async function handler(req, res) {
       records: holders,
       count: holders.length,
       pagesScanned: pages,
-      truncated: Boolean(url),
-      note: 'مرتبة حسب الرصيد من الأكبر إلى الأصغر. المتاح للسحب يستبعد Selling Liabilities.'
+      truncated: false,
+      note: 'تم جلب جميع المحافظ الحاملة عبر كل صفحات Horizon وترتيبها حسب الرصيد.'
     });
   } catch (e) { json(res, 500, { error: errorMessage(e) }); }
 }
