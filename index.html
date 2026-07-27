@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#6f2dbd">
+  <meta name="description" content="Discover nearby Pi Network pioneers, services and products.">
+  <title>Nearby</title>
+  <style>
+:root{--purple:#6f2dbd;--purple-dark:#51208b;--purple-soft:#f2eaff;--ink:#21182c;--muted:#756b7d;--line:#e8e1ee;--bg:#faf8fc;--white:#fff;--shadow:0 12px 32px rgba(76,35,112,.10);font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--ink);background:var(--bg)}*{box-sizing:border-box}body{margin:0;min-height:100vh;background:linear-gradient(180deg,#fff 0,#faf8fc 28%,#f7f2fb 100%)}button,input,textarea,select{font:inherit}.app-header{position:sticky;top:0;z-index:20;display:flex;justify-content:space-between;align-items:center;padding:14px max(18px,env(safe-area-inset-left));background:rgba(255,255,255,.94);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}.brand{display:flex;align-items:center;gap:9px;color:var(--ink);font-size:1.2rem;font-weight:800;text-decoration:none}.brand-mark{display:grid;place-items:center;width:34px;height:34px;border-radius:12px;color:#fff;background:linear-gradient(145deg,#8e44d4,#5a2198);box-shadow:0 8px 18px rgba(111,45,189,.24)}.header-actions{display:flex;align-items:center;gap:9px}.lang-btn{width:40px;height:40px;border:1px solid #dbcce7;border-radius:50%;background:#fff;color:var(--purple);font-weight:800}.primary-btn,.secondary-btn{border:0;border-radius:14px;padding:13px 18px;font-weight:750;cursor:pointer;transition:.2s transform,.2s opacity}.primary-btn{background:linear-gradient(135deg,var(--purple),#8b3fd0);color:#fff;box-shadow:0 8px 20px rgba(111,45,189,.22)}.secondary-btn{background:var(--purple-soft);color:var(--purple-dark)}.primary-btn:active,.secondary-btn:active{transform:scale(.98)}.compact{padding:10px 14px;border-radius:12px}.app-shell{width:min(1050px,100%);margin:auto;padding:22px 18px 100px}.view{display:none}.view.active{display:block}.card{background:rgba(255,255,255,.95);border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow)}.hero{display:grid;gap:20px;padding:26px;overflow:hidden;position:relative}.hero:after{content:"π";position:absolute;right:-14px;bottom:-55px;font-size:12rem;font-weight:900;color:rgba(111,45,189,.055);pointer-events:none}.eyebrow{color:var(--purple);font-weight:800;font-size:.78rem;letter-spacing:.08em;text-transform:uppercase}.hero h1{max-width:720px;margin:9px 0 10px;font-size:clamp(1.8rem,5.5vw,3.3rem);line-height:1.08}.hero p{margin:0;color:var(--muted);font-size:1rem}.location-btn{width:max-content;display:flex;align-items:center;gap:8px}.status-text{min-height:20px!important;font-size:.9rem!important}.section-heading{display:flex;align-items:end;justify-content:space-between;gap:12px;margin:30px 2px 14px}.section-heading h2{margin:0;font-size:1.35rem}.section-heading p{margin:5px 0 0;color:var(--muted);font-size:.9rem}.count-badge{padding:5px 10px;border-radius:999px;background:var(--purple-soft);color:var(--purple);font-weight:800}.people-grid,.product-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}.person-card{padding:16px;display:flex;gap:13px;align-items:center;cursor:pointer}.avatar{width:60px;height:60px;border-radius:18px;object-fit:cover;background:var(--purple-soft);border:1px solid var(--line)}.person-card h3{margin:0 0 4px;font-size:1rem}.person-card p{margin:0;color:var(--muted);font-size:.86rem}.distance{display:inline-flex;margin-top:7px;padding:4px 8px;border-radius:999px;background:var(--purple-soft);color:var(--purple-dark);font-size:.75rem;font-weight:800}.empty-state{text-align:center;padding:38px 18px}.empty-icon{font-size:2.5rem;color:var(--purple)}.empty-state h3{margin:10px 0 6px}.empty-state p{margin:0;color:var(--muted)}.form-card{display:grid;gap:14px;padding:20px}.form-card label{display:grid;gap:7px;font-size:.88rem;font-weight:700}.form-card input,.form-card textarea,.form-card select,.message-form input{width:100%;border:1px solid #ded4e7;background:#fff;border-radius:13px;padding:12px 13px;outline:none;color:var(--ink)}.form-card input:focus,.form-card textarea:focus,.form-card select:focus,.message-form input:focus{border-color:var(--purple);box-shadow:0 0 0 3px rgba(111,45,189,.1)}.profile-hero{padding:24px}.profile-top{display:flex;align-items:center;gap:18px}.profile-top .avatar{width:88px;height:88px;border-radius:26px}.profile-top h1{margin:0}.username{color:var(--purple);font-weight:700}.profile-description{color:var(--muted);line-height:1.65}.profile-actions{display:flex;gap:10px;flex-wrap:wrap}.product-card{overflow:hidden}.product-card img{width:100%;height:150px;object-fit:cover;background:var(--purple-soft)}.product-body{padding:15px}.product-card h3{margin:0 0 5px}.product-card p{margin:0;color:var(--muted);font-size:.88rem;line-height:1.45}.product-price{display:block;margin-top:10px;color:var(--purple);font-weight:900}.remove-item{margin-top:10px;border:0;background:none;color:#b42318;font-weight:700;cursor:pointer}.messages-layout{display:grid;grid-template-columns:280px 1fr;min-height:68vh;overflow:hidden}.conversation-list{padding:18px;border-inline-end:1px solid var(--line)}.conversation-list h2{margin-top:0}.conversation{display:flex;align-items:center;gap:10px;padding:11px;border-radius:14px;cursor:pointer}.conversation:hover,.conversation.active{background:var(--purple-soft)}.conversation .avatar{width:42px;height:42px;border-radius:13px}.chat-panel{display:grid;grid-template-rows:auto 1fr auto;min-width:0}.chat-header{padding:18px;border-bottom:1px solid var(--line);font-weight:800}.chat-messages{padding:18px;overflow-y:auto;display:flex;flex-direction:column;gap:9px}.bubble{max-width:78%;padding:10px 13px;border-radius:16px;background:#f0edf3;line-height:1.45}.bubble.mine{align-self:flex-end;background:var(--purple);color:#fff}.bubble-time{display:block;margin-top:4px;font-size:.68rem;opacity:.7}.message-form{display:grid;grid-template-columns:1fr auto;gap:9px;padding:14px;border-top:1px solid var(--line)}.bottom-nav{position:fixed;z-index:30;left:50%;bottom:max(12px,env(safe-area-inset-bottom));transform:translateX(-50%);display:flex;width:min(420px,calc(100% - 24px));padding:8px;background:rgba(255,255,255,.96);border:1px solid var(--line);border-radius:20px;box-shadow:0 15px 38px rgba(64,29,91,.2);backdrop-filter:blur(15px)}.bottom-nav button{flex:1;border:0;background:none;border-radius:14px;padding:7px;color:var(--muted);cursor:pointer}.bottom-nav button span{display:block;font-size:1.2rem}.bottom-nav button small{display:block;margin-top:2px}.bottom-nav button.active{background:var(--purple-soft);color:var(--purple);font-weight:800}.toast{position:fixed;left:50%;bottom:100px;z-index:50;transform:translate(-50%,20px);padding:11px 16px;border-radius:13px;background:#24172e;color:#fff;opacity:0;pointer-events:none;transition:.25s}.toast.show{opacity:1;transform:translate(-50%,0)}[dir="rtl"] .hero:after{right:auto;left:-14px}[dir="rtl"] .conversation-list{border-inline-end:1px solid var(--line)}@media(max-width:720px){.app-header{padding:12px}.brand{font-size:1.05rem}.primary-btn.compact{font-size:.78rem;padding:10px}.app-shell{padding-inline:12px}.hero{padding:21px}.messages-layout{grid-template-columns:1fr}.conversation-list{border-inline-end:0;border-bottom:1px solid var(--line);max-height:210px;overflow:auto}.chat-panel{min-height:55vh}.profile-top{align-items:flex-start}.people-grid{grid-template-columns:1fr}}@media(max-width:390px){.header-actions{gap:6px}.lang-btn{width:36px;height:36px}.primary-btn.compact{padding:9px 10px}.brand-mark{width:31px;height:31px}}
+
+  </style>
+  <script src="https://sdk.minepi.com/pi-sdk.js"></script>
+</head>
+<body>
+  <header class="app-header">
+    <a class="brand" href="#home" aria-label="Nearby home">
+      <span class="brand-mark">π</span><span>Nearby</span>
+    </a>
+    <div class="header-actions">
+      <button id="langBtn" class="lang-btn" type="button" aria-label="Switch language">AR</button>
+      <button id="loginBtn" class="primary-btn compact" type="button" data-i18n="login">Sign in with Pi</button>
+    </div>
+  </header>
+
+  <main class="app-shell">
+    <section id="homeView" class="view active">
+      <div class="hero card">
+        <div>
+          <span class="eyebrow" data-i18n="heroEyebrow">Pi community around you</span>
+          <h1 data-i18n="heroTitle">Find trusted people, services and products nearby.</h1>
+          <p data-i18n="heroText">Share your location to discover Pioneers within 5 km.</p>
+        </div>
+        <button id="locateBtn" class="primary-btn location-btn" type="button">
+          <span>⌖</span><span data-i18n="useLocation">Use my location</span>
+        </button>
+        <p id="locationStatus" class="status-text" aria-live="polite"></p>
+      </div>
+
+      <div class="section-heading">
+        <div><h2 data-i18n="nearbyPeople">Nearby people</h2><p data-i18n="nearbyHint">Results are sorted by distance.</p></div>
+        <span id="resultCount" class="count-badge">0</span>
+      </div>
+      <div id="peopleGrid" class="people-grid"></div>
+      <div id="emptyState" class="empty-state card">
+        <div class="empty-icon">◎</div>
+        <h3 data-i18n="emptyTitle">No nearby results yet</h3>
+        <p data-i18n="emptyText">Tap “Use my location” to start searching.</p>
+      </div>
+    </section>
+
+    <section id="profileView" class="view">
+      <div id="profileContent"></div>
+    </section>
+
+    <section id="editView" class="view">
+      <div class="section-heading"><div><h2 data-i18n="editProfile">Edit profile</h2><p data-i18n="editHint">Tell nearby Pioneers what you offer.</p></div></div>
+      <form id="profileForm" class="card form-card">
+        <label><span data-i18n="displayName">Display name</span><input id="displayName" maxlength="60" required></label>
+        <label><span data-i18n="photoUrl">Profile photo URL</span><input id="photoUrl" type="url" placeholder="https://..."></label>
+        <label><span data-i18n="description">Description</span><textarea id="description" maxlength="300" rows="4"></textarea></label>
+        <label><span data-i18n="accountType">Account type</span><select id="accountType"><option value="person" data-i18n="person">Person</option><option value="service" data-i18n="serviceProvider">Service provider</option><option value="seller" data-i18n="seller">Seller</option></select></label>
+        <button class="primary-btn" type="submit" data-i18n="saveProfile">Save profile</button>
+      </form>
+      <div class="section-heading"><div><h2 data-i18n="products">Products & services</h2><p data-i18n="productsHint">Add compact cards to your profile.</p></div></div>
+      <form id="productForm" class="card form-card">
+        <label><span data-i18n="itemName">Name</span><input id="itemName" maxlength="80" required></label>
+        <label><span data-i18n="price">Price</span><input id="itemPrice" type="number" min="0" step="0.01" required></label>
+        <label><span data-i18n="currency">Currency</span><select id="itemCurrency"><option value="PI">PI</option><option value="USD">USD</option><option value="EGP">EGP</option></select></label>
+        <label><span data-i18n="itemPhoto">Image URL</span><input id="itemPhoto" type="url" placeholder="https://..."></label>
+        <label><span data-i18n="itemDescription">Description</span><textarea id="itemDescription" maxlength="220" rows="3"></textarea></label>
+        <button class="secondary-btn" type="submit" data-i18n="addItem">Add item</button>
+      </form>
+      <div id="myItems" class="product-grid"></div>
+    </section>
+
+    <section id="messagesView" class="view">
+      <div class="messages-layout card">
+        <aside class="conversation-list">
+          <h2 data-i18n="messages">Messages</h2>
+          <div id="conversationList"></div>
+        </aside>
+        <section class="chat-panel">
+          <div id="chatHeader" class="chat-header" data-i18n="selectConversation">Select a conversation</div>
+          <div id="chatMessages" class="chat-messages"></div>
+          <form id="messageForm" class="message-form">
+            <input id="messageInput" maxlength="1000" data-i18n-placeholder="typeMessage" placeholder="Type a message..." disabled>
+            <button class="primary-btn compact" type="submit" disabled data-i18n="send">Send</button>
+          </form>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <nav class="bottom-nav" aria-label="Main navigation">
+    <button data-view="homeView" class="active"><span>⌂</span><small data-i18n="home">Home</small></button>
+    <button data-view="editView"><span>◉</span><small data-i18n="profile">Profile</small></button>
+    <button data-view="messagesView"><span>✉</span><small data-i18n="messages">Messages</small></button>
+  </nav>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script>
+'use strict';
+
+const STORAGE_KEY = 'nearby_pi_state_v1';
+const RADIUS_KM = 5;
+const fallbackAvatar = 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200"><rect width="100%" height="100%" fill="#f2eaff"/><circle cx="100" cy="76" r="38" fill="#8b3fd0"/><path d="M35 190c7-45 34-69 65-69s58 24 65 69" fill="#6f2dbd"/></svg>`);
+
+const i18n = {
+  en:{login:'Sign in with Pi',logout:'Sign out',heroEyebrow:'Pi community around you',heroTitle:'Find trusted people, services and products nearby.',heroText:'Share your location to discover Pioneers within 5 km.',useLocation:'Use my location',nearbyPeople:'Nearby people',nearbyHint:'Results are sorted by distance.',emptyTitle:'No nearby results yet',emptyText:'Tap “Use my location” to start searching.',editProfile:'Edit profile',editHint:'Tell nearby Pioneers what you offer.',displayName:'Display name',photoUrl:'Profile photo URL',description:'Description',accountType:'Account type',person:'Person',serviceProvider:'Service provider',seller:'Seller',saveProfile:'Save profile',products:'Products & services',productsHint:'Add compact cards to your profile.',itemName:'Name',price:'Price',currency:'Currency',itemPhoto:'Image URL',itemDescription:'Description',addItem:'Add item',messages:'Messages',selectConversation:'Select a conversation',typeMessage:'Type a message...',send:'Send',home:'Home',profile:'Profile',locationLoading:'Getting your location…',locationFound:'Location found. Searching within 5 km.',locationDenied:'Location permission was denied or unavailable.',loginSuccess:'Signed in successfully.',loginFailed:'Pi sign-in failed. Open the app in Pi Browser.',demoLogin:'Demo profile loaded because Pi SDK is unavailable.',saved:'Profile saved.',itemAdded:'Item added.',messageSent:'Message sent.',signInFirst:'Please sign in first.',message:'Message',noDescription:'No description yet.',kmAway:'km away',remove:'Remove',you:'You',nearby:'Nearby',profileProducts:'Products & services',noItems:'No products or services added.',openProfile:'Open profile'} ,
+  ar:{login:'تسجيل الدخول عبر Pi',logout:'تسجيل الخروج',heroEyebrow:'مجتمع باي من حولك',heroTitle:'اعثر على أشخاص وخدمات ومنتجات موثوقة بالقرب منك.',heroText:'شارك موقعك لاكتشاف رواد Pi في نطاق 5 كم.',useLocation:'تحديد موقعي',nearbyPeople:'المستخدمون القريبون',nearbyHint:'النتائج مرتبة حسب المسافة.',emptyTitle:'لا توجد نتائج قريبة بعد',emptyText:'اضغط على «تحديد موقعي» لبدء البحث.',editProfile:'تعديل الملف الشخصي',editHint:'أخبر رواد Pi القريبين بما تقدمه.',displayName:'الاسم الظاهر',photoUrl:'رابط صورة الملف الشخصي',description:'الوصف',accountType:'نوع الحساب',person:'شخص',serviceProvider:'مقدم خدمة',seller:'بائع',saveProfile:'حفظ الملف الشخصي',products:'المنتجات والخدمات',productsHint:'أضف بطاقات صغيرة إلى ملفك الشخصي.',itemName:'الاسم',price:'السعر',currency:'العملة',itemPhoto:'رابط الصورة',itemDescription:'الوصف',addItem:'إضافة عنصر',messages:'الرسائل',selectConversation:'اختر محادثة',typeMessage:'اكتب رسالة...',send:'إرسال',home:'الرئيسية',profile:'الملف الشخصي',locationLoading:'جارٍ تحديد موقعك…',locationFound:'تم تحديد الموقع. البحث في نطاق 5 كم.',locationDenied:'تم رفض إذن الموقع أو تعذر تحديده.',loginSuccess:'تم تسجيل الدخول بنجاح.',loginFailed:'فشل تسجيل الدخول. افتح التطبيق داخل Pi Browser.',demoLogin:'تم تحميل حساب تجريبي لأن Pi SDK غير متاح.',saved:'تم حفظ الملف الشخصي.',itemAdded:'تمت إضافة العنصر.',messageSent:'تم إرسال الرسالة.',signInFirst:'سجل الدخول أولًا.',message:'مراسلة',noDescription:'لا يوجد وصف بعد.',kmAway:'كم',remove:'حذف',you:'أنت',nearby:'قريب',profileProducts:'المنتجات والخدمات',noItems:'لا توجد منتجات أو خدمات مضافة.',openProfile:'فتح الملف'}
+};
+
+const seedUsers = [
+  {uid:'seed_1',username:'sara_pi',name:'Sara Hassan',photo:'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=300&q=80',description:'Handmade gifts and custom packaging.',type:'seller',lat:30.0478,lng:31.2357,products:[{id:'p1',name:'Gift Box',price:18,currency:'PI',description:'Customized gift box.',photo:'https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&w=500&q=80'}]},
+  {uid:'seed_2',username:'ahmed_fix',name:'Ahmed Ali',photo:'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&q=80',description:'Mobile repair and technical support.',type:'service',lat:30.0612,lng:31.2298,products:[{id:'p2',name:'Phone checkup',price:3,currency:'PI',description:'Full hardware and software diagnosis.',photo:'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=500&q=80'}]},
+  {uid:'seed_3',username:'nour_design',name:'Nour Samir',photo:'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80',description:'Graphic designer for social media and brands.',type:'service',lat:30.0394,lng:31.2211,products:[{id:'p3',name:'Logo design',price:25,currency:'PI',description:'Modern logo with two concepts.',photo:'https://images.unsplash.com/photo-1561070791-2526d30994b5?auto=format&fit=crop&w=500&q=80'}]}
+];
+
+let state = loadState();
+let activeChatUserId = null;
+
+function loadState(){
+  const saved = localStorage.getItem(STORAGE_KEY);
+  if(saved){try{return JSON.parse(saved)}catch{}}
+  return {lang:'en',currentUser:null,users:seedUsers,messages:[],location:null};
+}
+function saveState(){localStorage.setItem(STORAGE_KEY,JSON.stringify(state));}
+function t(key){return i18n[state.lang][key] || key;}
+function escapeHtml(value=''){return String(value).replace(/[&<>'"]/g,(c)=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));}
+function safeUrl(url){return /^https?:\/\//i.test(url||'') || /^data:image\//i.test(url||'') ? url : fallbackAvatar;}
+function toast(message){const el=document.getElementById('toast');el.textContent=message;el.classList.add('show');clearTimeout(toast.timer);toast.timer=setTimeout(()=>el.classList.remove('show'),2600);}
+function applyLanguage(){
+  document.documentElement.lang=state.lang;document.documentElement.dir=state.lang==='ar'?'rtl':'ltr';
+  document.getElementById('langBtn').textContent=state.lang==='en'?'AR':'EN';
+  document.querySelectorAll('[data-i18n]').forEach(el=>el.textContent=t(el.dataset.i18n));
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el=>el.placeholder=t(el.dataset.i18nPlaceholder));
+  document.getElementById('loginBtn').textContent=state.currentUser?t('logout'):t('login');
+  renderAll();saveState();
+}
+function switchView(id){document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id===id));document.querySelectorAll('.bottom-nav button').forEach(b=>b.classList.toggle('active',b.dataset.view===id));window.scrollTo({top:0,behavior:'smooth'});}
+function distanceKm(a,b){const R=6371;const dLat=(b.lat-a.lat)*Math.PI/180;const dLng=(b.lng-a.lng)*Math.PI/180;const x=Math.sin(dLat/2)**2+Math.cos(a.lat*Math.PI/180)*Math.cos(b.lat*Math.PI/180)*Math.sin(dLng/2)**2;return 2*R*Math.asin(Math.sqrt(x));}
+function getAllUsers(){const list=[...state.users];if(state.currentUser){const idx=list.findIndex(u=>u.uid===state.currentUser.uid);if(idx>=0)list[idx]=state.currentUser;else list.unshift(state.currentUser);}return list;}
+function renderPeople(){
+  const grid=document.getElementById('peopleGrid');let people=getAllUsers().filter(u=>!state.currentUser||u.uid!==state.currentUser.uid);
+  if(state.location){people=people.map(u=>({...u,distance:distanceKm(state.location,u)})).filter(u=>u.distance<=RADIUS_KM).sort((a,b)=>a.distance-b.distance);}else people=[];
+  grid.innerHTML=people.map(u=>`<article class="person-card card" data-user="${escapeHtml(u.uid)}" tabindex="0"><img class="avatar" src="${safeUrl(u.photo)}" alt=""><div><h3>${escapeHtml(u.name||u.username)}</h3><p>@${escapeHtml(u.username)}</p><span class="distance">${u.distance.toFixed(1)} ${t('kmAway')}</span></div></article>`).join('');
+  document.getElementById('resultCount').textContent=people.length;document.getElementById('emptyState').style.display=people.length?'none':'block';
+  grid.querySelectorAll('[data-user]').forEach(el=>{const open=()=>openProfile(el.dataset.user);el.addEventListener('click',open);el.addEventListener('keydown',e=>{if(e.key==='Enter')open();});});
+}
+function openProfile(uid){const user=getAllUsers().find(u=>u.uid===uid);if(!user)return;const products=user.products||[];document.getElementById('profileContent').innerHTML=`<article class="profile-hero card"><div class="profile-top"><img class="avatar" src="${safeUrl(user.photo)}" alt=""><div><h1>${escapeHtml(user.name||user.username)}</h1><div class="username">@${escapeHtml(user.username)}</div></div></div><p class="profile-description">${escapeHtml(user.description||t('noDescription'))}</p><div class="profile-actions"><button class="primary-btn" id="profileMessageBtn">${t('message')}</button></div></article><div class="section-heading"><div><h2>${t('profileProducts')}</h2></div></div><div class="product-grid">${products.length?products.map(productCard).join(''):`<div class="empty-state card"><p>${t('noItems')}</p></div>`}</div>`;
+  document.getElementById('profileMessageBtn').addEventListener('click',()=>startChat(uid));switchView('profileView');
+}
+function productCard(p,editable=false){return `<article class="product-card card"><img src="${safeUrl(p.photo)}" alt=""><div class="product-body"><h3>${escapeHtml(p.name)}</h3><p>${escapeHtml(p.description||'')}</p><span class="product-price">${Number(p.price).toFixed(2)} ${escapeHtml(p.currency)}</span>${editable?`<button class="remove-item" data-remove="${escapeHtml(p.id)}">${t('remove')}</button>`:''}</div></article>`;}
+function renderMyProfile(){if(!state.currentUser)return;document.getElementById('displayName').value=state.currentUser.name||'';document.getElementById('photoUrl').value=state.currentUser.photo?.startsWith('http')?state.currentUser.photo:'';document.getElementById('description').value=state.currentUser.description||'';document.getElementById('accountType').value=state.currentUser.type||'person';const box=document.getElementById('myItems');box.innerHTML=(state.currentUser.products||[]).map(p=>productCard(p,true)).join('');box.querySelectorAll('[data-remove]').forEach(btn=>btn.onclick=()=>{state.currentUser.products=state.currentUser.products.filter(p=>p.id!==btn.dataset.remove);syncCurrentUser();renderMyProfile();});}
+function renderMessages(){
+  const users=getAllUsers().filter(u=>!state.currentUser||u.uid!==state.currentUser.uid);const list=document.getElementById('conversationList');list.innerHTML=users.map(u=>`<div class="conversation ${u.uid===activeChatUserId?'active':''}" data-chat="${escapeHtml(u.uid)}"><img class="avatar" src="${safeUrl(u.photo)}" alt=""><div><strong>${escapeHtml(u.name||u.username)}</strong><small style="display:block;color:var(--muted)">@${escapeHtml(u.username)}</small></div></div>`).join('');list.querySelectorAll('[data-chat]').forEach(el=>el.onclick=()=>startChat(el.dataset.chat));renderChat();
+}
+function startChat(uid){if(!state.currentUser){toast(t('signInFirst'));return;}activeChatUserId=uid;switchView('messagesView');renderMessages();}
+function renderChat(){const target=getAllUsers().find(u=>u.uid===activeChatUserId);const input=document.getElementById('messageInput');const button=document.querySelector('#messageForm button');if(!target||!state.currentUser){document.getElementById('chatHeader').textContent=t('selectConversation');document.getElementById('chatMessages').innerHTML='';input.disabled=true;button.disabled=true;return;}document.getElementById('chatHeader').textContent=target.name||target.username;input.disabled=false;button.disabled=false;const messages=state.messages.filter(m=>(m.from===state.currentUser.uid&&m.to===target.uid)||(m.to===state.currentUser.uid&&m.from===target.uid)).sort((a,b)=>a.createdAt-b.createdAt);const area=document.getElementById('chatMessages');area.innerHTML=messages.map(m=>`<div class="bubble ${m.from===state.currentUser.uid?'mine':''}">${escapeHtml(m.text)}<span class="bubble-time">${new Date(m.createdAt).toLocaleTimeString(state.lang,{hour:'2-digit',minute:'2-digit'})}</span></div>`).join('');area.scrollTop=area.scrollHeight;}
+function syncCurrentUser(){const i=state.users.findIndex(u=>u.uid===state.currentUser.uid);if(i>=0)state.users[i]=state.currentUser;else state.users.push(state.currentUser);saveState();renderAll();}
+function renderAll(){renderPeople();renderMyProfile();renderMessages();}
+
+async function piLogin(){
+  if(state.currentUser){state.currentUser=null;activeChatUserId=null;saveState();applyLanguage();return;}
+  try{
+    if(window.Pi?.init&&window.Pi?.authenticate){
+      window.Pi.init({version:'2.0',sandbox:false});
+      const auth=await window.Pi.authenticate(['username'],()=>{});
+      const user=auth.user;
+      state.currentUser={uid:user.uid,username:user.username,name:user.username,photo:fallbackAvatar,description:'',type:'person',products:[],lat:state.location?.lat||30.0444,lng:state.location?.lng||31.2357};
+      syncCurrentUser();toast(t('loginSuccess'));applyLanguage();
+    }else{throw new Error('Pi SDK unavailable');}
+  }catch(error){
+    console.warn(error);
+    state.currentUser={uid:'demo_local',username:'demo_pioneer',name:'Demo Pioneer',photo:fallbackAvatar,description:'Local demo account. Open in Pi Browser for real Pi authentication.',type:'person',products:[],lat:state.location?.lat||30.0444,lng:state.location?.lng||31.2357};
+    syncCurrentUser();toast(t('demoLogin'));applyLanguage();
+  }
+}
+
+function locate(){
+  const status=document.getElementById('locationStatus');status.textContent=t('locationLoading');
+  if(!navigator.geolocation){status.textContent=t('locationDenied');return;}
+  navigator.geolocation.getCurrentPosition(pos=>{state.location={lat:pos.coords.latitude,lng:pos.coords.longitude,accuracy:pos.coords.accuracy};if(state.currentUser){state.currentUser.lat=state.location.lat;state.currentUser.lng=state.location.lng;syncCurrentUser();}saveState();status.textContent=t('locationFound');renderPeople();},()=>{status.textContent=t('locationDenied');},{enableHighAccuracy:true,timeout:15000,maximumAge:60000});
+}
+
+document.getElementById('langBtn').addEventListener('click',()=>{state.lang=state.lang==='en'?'ar':'en';applyLanguage();});
+document.getElementById('loginBtn').addEventListener('click',piLogin);
+document.getElementById('locateBtn').addEventListener('click',locate);
+document.querySelectorAll('.bottom-nav button').forEach(btn=>btn.addEventListener('click',()=>{if(btn.dataset.view==='editView'&&!state.currentUser){toast(t('signInFirst'));return;}switchView(btn.dataset.view);}));
+document.getElementById('profileForm').addEventListener('submit',e=>{e.preventDefault();if(!state.currentUser)return toast(t('signInFirst'));state.currentUser.name=document.getElementById('displayName').value.trim();state.currentUser.photo=document.getElementById('photoUrl').value.trim()||fallbackAvatar;state.currentUser.description=document.getElementById('description').value.trim();state.currentUser.type=document.getElementById('accountType').value;syncCurrentUser();toast(t('saved'));});
+document.getElementById('productForm').addEventListener('submit',e=>{e.preventDefault();if(!state.currentUser)return toast(t('signInFirst'));const item={id:`item_${Date.now()}`,name:document.getElementById('itemName').value.trim(),price:Number(document.getElementById('itemPrice').value),currency:document.getElementById('itemCurrency').value,photo:document.getElementById('itemPhoto').value.trim()||fallbackAvatar,description:document.getElementById('itemDescription').value.trim()};state.currentUser.products=state.currentUser.products||[];state.currentUser.products.push(item);syncCurrentUser();e.target.reset();toast(t('itemAdded'));});
+document.getElementById('messageForm').addEventListener('submit',e=>{e.preventDefault();const input=document.getElementById('messageInput');const text=input.value.trim();if(!text||!state.currentUser||!activeChatUserId)return;state.messages.push({id:`msg_${Date.now()}`,from:state.currentUser.uid,to:activeChatUserId,text,createdAt:Date.now()});saveState();input.value='';renderChat();toast(t('messageSent'));});
+
+applyLanguage();
+
+  </script>
+</body>
+</html>
