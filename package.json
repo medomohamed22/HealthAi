@@ -1,18 +1,20 @@
 {
-  "name": "nearby-pi-app",
-  "version": "1.1.0",
+  "name": "nearby-pi-supabase-vercel",
+  "version": "3.0.0",
   "private": true,
-  "description": "Nearby marketplace and services app for Pi Network pioneers",
-  "main": "api/server.js",
+  "description": "Nearby Pi Network marketplace deployed on Vercel with Supabase",
   "scripts": {
-    "start": "node api/server.js",
-    "dev": "node --watch api/server.js"
+    "dev": "vercel dev",
+    "start": "vercel dev",
+    "check": "node --check api/index.js"
   },
   "engines": {
-    "node": ">=18"
+    "node": "24.x"
   },
   "dependencies": {
-    "express": "^4.21.2",
-    "helmet": "^8.1.0"
+    "@supabase/supabase-js": "2.54.0",
+    "express": "4.21.2",
+    "helmet": "8.1.0",
+    "multer": "2.0.2"
   }
 }
