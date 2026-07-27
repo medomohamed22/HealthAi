@@ -6,5 +6,5 @@
   "scripts": {"dev": "vercel dev"},
   "dependencies": {"@stellar/stellar-sdk": "^13.3.0"},
   "devDependencies": {"vercel": "^44.7.3"},
-  "engines": {"node": ">=20"}
+  "engines": {"node": "20.x"}
 }
