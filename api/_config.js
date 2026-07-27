@@ -1,53 +1,49 @@
-import * as StellarSdk from '@stellar/stellar-sdk';
+import { Horizon, Keypair, Networks, Asset } from '@stellar/stellar-sdk';
 
 export const HORIZON_URL = process.env.PI_HORIZON_URL || 'https://api.testnet.minepi.com';
 export const NETWORK_PASSPHRASE = process.env.PI_NETWORK_PASSPHRASE || 'Pi Testnet';
+export const TOKEN_CODE = String(process.env.TOKEN_CODE || '').trim().toUpperCase();
+export const server = new Horizon.Server(HORIZON_URL);
 
-export function getServer() {
-  return new StellarSdk.Horizon.Server(HORIZON_URL);
-}
-
-export function sendJson(res, status, data) {
+export function json(res, status, body) {
   res.status(status).setHeader('Content-Type', 'application/json; charset=utf-8');
   res.setHeader('Cache-Control', 'no-store');
-  return res.end(JSON.stringify(data));
+  res.end(JSON.stringify(body));
 }
-
-export function requirePost(req, res) {
-  if (req.method !== 'POST') {
-    res.setHeader('Allow', 'POST');
-    sendJson(res, 405, { ok: false, error: 'Method not allowed' });
-    return false;
-  }
-  return true;
+export function cors(req, res) {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  if (req.method === 'OPTIONS') { res.status(204).end(); return true; }
+  return false;
 }
-
 export function requireAdmin(req, res) {
   const expected = process.env.ADMIN_TOKEN;
-  const supplied = req.headers['x-admin-token'];
-  if (!expected) {
-    sendJson(res, 500, { ok: false, error: 'ADMIN_TOKEN is not configured on the server.' });
-    return false;
-  }
-  if (!supplied || supplied !== expected) {
-    sendJson(res, 401, { ok: false, error: 'Invalid admin token.' });
+  const supplied = String(req.headers.authorization || '').replace(/^Bearer\s+/i, '');
+  if (!expected || supplied !== expected) {
+    json(res, 401, { error: 'رمز الإدارة غير صحيح.' });
     return false;
   }
   return true;
 }
-
-export function getWalletKeypair() {
-  const secret = process.env.PI_WALLET_SECRET;
-  if (!secret) throw new Error('PI_WALLET_SECRET is not configured.');
-  const keypair = StellarSdk.Keypair.fromSecret(secret.trim());
-  return keypair;
+export function getIssuer() {
+  if (!process.env.TOKEN_ISSUER_SECRET) throw new Error('TOKEN_ISSUER_SECRET غير مضبوط.');
+  return Keypair.fromSecret(process.env.TOKEN_ISSUER_SECRET);
 }
-
-export function normalizeError(error) {
-  const data = error?.response?.data;
-  const resultCodes = data?.extras?.result_codes;
-  return {
-    message: data?.detail || data?.title || error?.message || 'Unexpected server error',
-    resultCodes: resultCodes || null
-  };
+export function getDistributor() {
+  if (!process.env.TOKEN_DISTRIBUTOR_SECRET) throw new Error('TOKEN_DISTRIBUTOR_SECRET غير مضبوط.');
+  return Keypair.fromSecret(process.env.TOKEN_DISTRIBUTOR_SECRET);
+}
+export function getAsset() {
+  if (!TOKEN_CODE || !/^[A-Z0-9]{1,12}$/.test(TOKEN_CODE)) throw new Error('TOKEN_CODE غير صالح.');
+  return new Asset(TOKEN_CODE, getIssuer().publicKey());
+}
+export function validAmount(value) {
+  const s = String(value ?? '').trim();
+  if (!/^(?:0|[1-9]\d*)(?:\.\d{1,7})?$/.test(s) || Number(s) <= 0) throw new Error('الكمية يجب أن تكون موجبة وبحد أقصى 7 منازل عشرية.');
+  return s;
+}
+export function errorMessage(error) {
+  const result = error?.response?.data?.extras?.result_codes;
+  return result ? `${error.message}: ${JSON.stringify(result)}` : (error?.message || 'خطأ غير معروف');
 }
