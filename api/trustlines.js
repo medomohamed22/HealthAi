@@ -1,31 +1,51 @@
-import { cors, json, server, getAsset, errorMessage } from './_config.js';
+import { cors, json, requireAdmin, getAsset, horizonJson, server, findTrustline, errorMessage } from './_config.js';
 
 export default async function handler(req, res) {
   if (cors(req, res)) return;
   if (req.method !== 'GET') return json(res, 405, { error: 'Method not allowed' });
+  if (!requireAdmin(req, res)) return;
   try {
     const asset = getAsset();
-    const found = new Map();
-    let page = await server.operations().order('desc').limit(200).call();
-    for (let pass = 0; pass < 12 && found.size < 10; pass++) {
-      for (const op of page.records) {
-        if (op.type !== 'change_trust' || op.asset_code !== asset.code || op.asset_issuer !== asset.issuer || String(op.limit) === '0.0000000') continue;
+    const candidates = new Map();
+    let url = '/operations?order=desc&limit=200&include_failed=false';
+    let pages = 0; let scanned = 0;
+    while (url && pages < 30 && candidates.size < 40) {
+      const page = await horizonJson(url); pages++;
+      const records = page?._embedded?.records || [];
+      scanned += records.length;
+      for (const op of records) {
+        if (op.type !== 'change_trust') continue;
+        if (op.asset_code !== asset.code || op.asset_issuer !== asset.issuer) continue;
+        if (Number(op.limit || 0) <= 0) continue;
         const address = op.source_account;
-        if (!found.has(address)) found.set(address, { address, createdAt: op.created_at, operationId: op.id, limit: op.limit });
-        if (found.size >= 20) break;
+        if (address && !candidates.has(address)) candidates.set(address, {
+          address, createdAt: op.created_at, operationId: op.id, pagingToken: op.paging_token, limitAtOperation: op.limit
+        });
       }
-      if (found.size >= 10 || !page.records.length) break;
-      page = await page.next();
+      const next = page?._links?.next?.href;
+      url = records.length === 200 && next ? next : null;
     }
     const checked = [];
-    for (const item of found.values()) {
+    for (const item of candidates.values()) {
       try {
         const account = await server.loadAccount(item.address);
-        const line = account.balances.find(b => b.asset_code === asset.code && b.asset_issuer === asset.issuer);
-        if (line) checked.push({ ...item, balance: line.balance, authorized: line.is_authorized !== false, clawbackEnabled: Boolean(line.is_clawback_enabled) });
-      } catch {}
+        const line = findTrustline(account, asset);
+        if (line) checked.push({
+          ...item,
+          balance: line.balance,
+          sellingLiabilities: line.selling_liabilities || '0.0000000',
+          authorized: line.is_authorized !== false,
+          clawbackEnabled: Boolean(line.is_clawback_enabled)
+        });
+      } catch { /* account may have been merged */ }
       if (checked.length >= 10) break;
     }
-    json(res, 200, { records: checked, note: 'مرتبة حسب أحدث عملية Change Trust الظاهرة في سجل Horizon، مع استبعاد خطوط الثقة المحذوفة حاليًا.' });
+    json(res, 200, {
+      records: checked,
+      diagnostics: { pagesScanned: pages, operationsScanned: scanned, candidatesFound: candidates.size },
+      note: checked.length
+        ? 'تم جلب أحدث Change Trust مطابقة ثم التحقق أن كل Trustline ما زالت موجودة حاليًا.'
+        : 'لم نجد Change Trust مطابقة داخل النطاق المفحوص. استخدم قائمة الحاملين لرؤية جميع Trustlines الحالية.'
+    });
   } catch (e) { json(res, 500, { error: errorMessage(e) }); }
 }
