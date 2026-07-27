@@ -9,7 +9,7 @@ export default async function handler(req, res) {
     const candidates = new Map();
     let url = '/operations?order=desc&limit=200&include_failed=false';
     let pages = 0; let scanned = 0;
-    while (url && pages < 30 && candidates.size < 40) {
+    while (url && pages < 12 && candidates.size < 40) {
       const page = await horizonJson(url); pages++;
       const records = page?._embedded?.records || [];
       scanned += records.length;
@@ -43,6 +43,7 @@ export default async function handler(req, res) {
     json(res, 200, {
       records: checked,
       diagnostics: { pagesScanned: pages, operationsScanned: scanned, candidatesFound: candidates.size },
+      pagesScanned: pages, operationsScanned: scanned, candidatesFound: candidates.size,
       note: checked.length
         ? 'تم جلب أحدث Change Trust مطابقة ثم التحقق أن كل Trustline ما زالت موجودة حاليًا.'
         : 'لم نجد Change Trust مطابقة داخل النطاق المفحوص. استخدم قائمة الحاملين لرؤية جميع Trustlines الحالية.'

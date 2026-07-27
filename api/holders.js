@@ -7,7 +7,7 @@ export default async function handler(req, res) {
   if (!requireAdmin(req, res)) return;
   try {
     const asset = getAsset();
-    const maxPages = Math.min(Math.max(Number(req.query?.pages || 20), 1), 50);
+    const maxPages = Math.min(Math.max(Number(req.query?.pages || 5), 1), 50);
     let url = `/accounts?asset=${encodeURIComponent(`${asset.code}:${asset.issuer}`)}&order=asc&limit=200`;
     const holders = []; let pages = 0;
     while (url && pages < maxPages) {
