@@ -60,6 +60,33 @@ export async function horizonJson(urlOrPath, timeoutMs = 15000) {
     return data;
   } finally { clearTimeout(timer); }
 }
+
+export async function getDynamicBaseFee() {
+  // TransactionBuilder expects a per-operation maximum fee in stroops.
+  // Pi Testnet can raise the accepted fee above Stellar SDK's static BASE_FEE.
+  const candidates = [];
+  try {
+    const fetched = Number(await server.fetchBaseFee());
+    if (Number.isFinite(fetched) && fetched > 0) candidates.push(fetched);
+  } catch {}
+  try {
+    const stats = await horizonJson('/fee_stats', 10000);
+    const charged = stats?.fee_charged || {};
+    const maxFee = stats?.max_fee || {};
+    for (const value of [
+      stats?.last_ledger_base_fee,
+      charged.mode, charged.p90, charged.p95, charged.p99, charged.max,
+      maxFee.mode, maxFee.p90, maxFee.p95, maxFee.p99
+    ]) {
+      const n = Number(value);
+      if (Number.isFinite(n) && n > 0) candidates.push(n);
+    }
+  } catch {}
+  const observed = candidates.length ? Math.max(...candidates) : 100000;
+  // 2x headroom avoids tx_insufficient_fee during temporary fee pressure.
+  return String(Math.max(100000, Math.ceil(observed * 2)));
+}
+
 export function errorMessage(error) {
   const result = error?.response?.data?.extras?.result_codes;
   if (result) return `${error.message}: ${JSON.stringify(result)}`;

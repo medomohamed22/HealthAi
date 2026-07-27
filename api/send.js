@@ -1,5 +1,5 @@
-import { TransactionBuilder, Operation, Memo, BASE_FEE, StrKey } from '@stellar/stellar-sdk';
-import { cors, json, requireAdmin, server, getDistributor, getAsset, validAmount, NETWORK_PASSPHRASE, errorMessage } from './_config.js';
+import { TransactionBuilder, Operation, Memo, StrKey } from '@stellar/stellar-sdk';
+import { cors, json, requireAdmin, server, getDistributor, getAsset, validAmount, NETWORK_PASSPHRASE, errorMessage, getDynamicBaseFee } from './_config.js';
 export default async function handler(req, res) {
   if (cors(req, res)) return;
   if (req.method !== 'POST') return json(res, 405, { error: 'Method not allowed' });
@@ -14,8 +14,8 @@ export default async function handler(req, res) {
       return { address, valid: Boolean(line && line.is_authorized !== false) };
     }));
     const invalid = checks.filter(x => !x.valid).map(x => x.address); if (invalid.length) throw new Error(`لا يوجد Trustline صالح للعناوين: ${invalid.join(', ')}`);
-    const source = await server.loadAccount(distributor.publicKey());
-    let builder = new TransactionBuilder(source, { fee: String(Number(BASE_FEE) * recipients.length), networkPassphrase: NETWORK_PASSPHRASE });
+    const [source, fee] = await Promise.all([server.loadAccount(distributor.publicKey()), getDynamicBaseFee()]);
+    let builder = new TransactionBuilder(source, { fee, networkPassphrase: NETWORK_PASSPHRASE });
     for (const destination of recipients) builder = builder.addOperation(Operation.payment({ destination, asset, amount }));
     const tx = builder.addMemo(Memo.text(String(req.body?.memo || 'Token reward').slice(0, 28))).setTimeout(90).build();
     tx.sign(distributor); const result = await server.submitTransaction(tx);

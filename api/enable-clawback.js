@@ -1,5 +1,5 @@
-import { TransactionBuilder, Operation, Memo, BASE_FEE, AuthClawbackEnabledFlag, AuthRevocableFlag } from '@stellar/stellar-sdk';
-import { cors, json, requireAdmin, server, getIssuer, NETWORK_PASSPHRASE, errorMessage } from './_config.js';
+import { TransactionBuilder, Operation, Memo, AuthClawbackEnabledFlag, AuthRevocableFlag } from '@stellar/stellar-sdk';
+import { cors, json, requireAdmin, server, getIssuer, NETWORK_PASSPHRASE, errorMessage, getDynamicBaseFee } from './_config.js';
 
 export default async function handler(req, res) {
   if (cors(req, res)) return;
@@ -9,13 +9,14 @@ export default async function handler(req, res) {
     if (req.body?.confirmation !== 'ENABLE CLAWBACK') throw new Error('اكتب ENABLE CLAWBACK للتأكيد.');
     const issuer = getIssuer();
     const source = await server.loadAccount(issuer.publicKey());
+    const fee = await getDynamicBaseFee();
     if (source.flags?.auth_immutable) throw new Error('حساب Issuer عليه AUTH_IMMUTABLE؛ لا يمكن تعديل صلاحياته.');
     if (source.flags?.auth_clawback_enabled && source.flags?.auth_revocable) {
       return json(res, 200, { ok: true, alreadyEnabled: true, flags: source.flags });
     }
     const master = source.signers.find(s => s.key === issuer.publicKey());
     if (!master || Number(master.weight) < Number(source.thresholds.med_threshold)) throw new Error('مفتاح Issuer لا يملك الوزن المطلوب لتنفيذ Set Options.');
-    const tx = new TransactionBuilder(source, { fee: BASE_FEE, networkPassphrase: NETWORK_PASSPHRASE })
+    const tx = new TransactionBuilder(source, { fee, networkPassphrase: NETWORK_PASSPHRASE })
       .addOperation(Operation.setOptions({ setFlags: AuthRevocableFlag | AuthClawbackEnabledFlag }))
       .addMemo(Memo.text('Enable asset clawback'))
       .setTimeout(60)
